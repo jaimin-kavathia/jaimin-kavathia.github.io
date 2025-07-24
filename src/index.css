@@ -1,0 +1,149 @@
+/* Import performance and accessibility optimizations */
+@import './styles/performance-optimizations.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Animation keyframes for portfolio animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Smooth scroll behavior for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Consistent light theme background to prevent flickering */
+html, body {
+  background-color: #ffffff;
+  min-height: 100vh;
+}
+
+/* Ensure root element has consistent background */
+#root {
+  background-color: #ffffff;
+  min-height: 100vh;
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support for light theme */
+@media (prefers-contrast: high) {
+  .text-gray-600 {
+    color: rgba(0, 0, 0, 0.9) !important;
+  }
+  
+  .text-gray-500 {
+    color: rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  .text-gray-700 {
+    color: rgba(0, 0, 0, 1) !important;
+  }
+  
+  .border-gray-200,
+  .border-gray-300 {
+    border-color: rgba(0, 0, 0, 0.3) !important;
+  }
+}
+
+/* Focus visible improvements for better keyboard navigation - light theme */
+.focus-visible:focus {
+  outline: 2px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+}
+
+/* Screen reader only class */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.sr-only:focus,
+.sr-only:active {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  padding: inherit !important;
+  margin: inherit !important;
+  overflow: visible !important;
+  clip: auto !important;
+  white-space: inherit !important;
+}
+
+/* Improved focus styles for better visibility - light theme */
+.focus\:ring-2:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5) !important;
+}
+
+/* Better contrast for light theme text */
+.text-gray-500 {
+  color: rgba(107, 114, 128, 1);
+}
+
+.text-gray-600 {
+  color: rgba(75, 85, 99, 1);
+}
+
+.text-gray-700 {
+  color: rgba(55, 65, 81, 1);
+}

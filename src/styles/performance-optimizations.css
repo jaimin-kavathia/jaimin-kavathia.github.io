@@ -1,0 +1,672 @@
+/**
+ * Performance and accessibility optimizations
+ */
+
+/* GPU acceleration for animated elements */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Remove GPU acceleration when not needed */
+.gpu-accelerated.animation-complete {
+  will-change: auto;
+  transform: none;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Disable transform animations */
+  [style*="transform"] {
+    transform: none !important;
+  }
+  
+  /* Provide alternative feedback for interactive elements */
+  button:hover,
+  a:hover,
+  [role="button"]:hover,
+  [tabindex]:hover {
+    background-color: rgba(59, 130, 246, 0.1) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+  }
+  
+  button:focus,
+  a:focus,
+  [role="button"]:focus,
+  [tabindex]:focus {
+    outline: 2px solid #3b82f6 !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2) !important;
+  }
+  
+  button:active,
+  a:active,
+  [role="button"]:active,
+  [tabindex]:active {
+    background-color: rgba(59, 130, 246, 0.2) !important;
+    transform: none !important;
+    scale: none !important;
+  }
+}
+
+/* Performance mode optimizations */
+.performance-mode {
+  /* Reduce visual complexity */
+  --animation-duration-fast: 0.15s;
+  --animation-duration-normal: 0.3s;
+  --animation-duration-slow: 0.5s;
+  --stagger-delay: 0.05s;
+}
+
+.performance-mode * {
+  /* Disable expensive effects */
+  backdrop-filter: none !important;
+  filter: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+.performance-mode .particle-background,
+.performance-mode .floating-shapes {
+  display: none !important;
+}
+
+/* Low-end device optimizations */
+@media (max-width: 768px) {
+  .gpu-accelerated {
+    /* Reduce GPU usage on mobile */
+    will-change: opacity;
+  }
+  
+  /* Simplify animations on mobile */
+  .complex-animation {
+    animation: simple-fade 0.3s ease-out;
+  }
+  
+  @keyframes simple-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  button,
+  a,
+  [role="button"] {
+    border: 2px solid currentColor !important;
+  }
+  
+  button:focus,
+  a:focus,
+  [role="button"]:focus {
+    outline: 3px solid !important;
+    outline-offset: 2px !important;
+  }
+  
+  /* Ensure sufficient contrast for gradients */
+  .bg-gradient-to-r,
+  .bg-gradient-to-br,
+  .bg-gradient-to-bl {
+    background: currentColor !important;
+  }
+}
+
+/* Memory optimization classes */
+.memory-optimized {
+  /* Prevent memory leaks from transforms */
+  transform: none;
+  will-change: auto;
+}
+
+.memory-optimized img,
+.memory-optimized video {
+  /* Optimize media loading */
+  loading: lazy;
+  decoding: async;
+}
+
+/* Intersection observer optimizations */
+.lazy-load-container {
+  /* Provide minimum height to prevent layout shift */
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lazy-load-placeholder {
+  /* Skeleton loading animation */
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0.1) 25%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    rgba(255, 255, 255, 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 2s infinite;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lazy-load-placeholder {
+    animation: none;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Focus management for accessibility */
+.focus-trap {
+  /* Ensure focus stays within modal/dialog */
+  position: relative;
+}
+
+.focus-trap:focus-within {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Skip link styling */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #3b82f6;
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1000;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Animation performance indicators (development only) */
+.dev-performance-indicator {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 12px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.dev-performance-indicator.good {
+  border-left: 4px solid #10b981;
+}
+
+.dev-performance-indicator.warning {
+  border-left: 4px solid #f59e0b;
+}
+
+.dev-performance-indicator.poor {
+  border-left: 4px solid #ef4444;
+}
+
+/* Utility classes for performance optimization */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.will-change-auto {
+  will-change: auto;
+}
+
+.contain-layout {
+  contain: layout;
+}
+
+.contain-paint {
+  contain: paint;
+}
+
+.contain-strict {
+  contain: strict;
+}
+
+/* Animation state classes */
+.animation-paused * {
+  animation-play-state: paused !important;
+}
+
+.animation-disabled * {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Responsive performance optimizations */
+@media (max-width: 480px) {
+  .mobile-performance-mode {
+    /* Ultra-light mode for very small screens */
+    --animation-duration-fast: 0.1s;
+    --animation-duration-normal: 0.2s;
+    --animation-duration-slow: 0.3s;
+    --stagger-delay: 0.02s;
+  }
+  
+  .mobile-performance-mode .backdrop-blur-md {
+    backdrop-filter: none;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Battery optimization */
+@media (prefers-reduced-data: reduce) {
+  .data-heavy-animation {
+    display: none !important;
+  }
+  
+  .background-video,
+  .particle-system {
+    display: none !important;
+  }
+}/* Cr
+oss-browser compatibility optimizations */
+
+/* Webkit/Safari specific optimizations */
+@supports (-webkit-backdrop-filter: blur(10px)) {
+  .webkit-backdrop-blur {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* Safari-specific fixes */
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance:none) {
+    .safari-fix {
+      /* Safari doesn't handle backdrop-filter well with transforms */
+      -webkit-transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+    }
+    
+    /* Fix Safari animation flickering */
+    .safari-animation-fix {
+      -webkit-transform: translate3d(0, 0, 0);
+      -webkit-backface-visibility: hidden;
+      -webkit-perspective: 1000;
+    }
+  }
+}
+
+/* Firefox-specific optimizations */
+@-moz-document url-prefix() {
+  .firefox-optimized {
+    /* Firefox doesn't support backdrop-filter well */
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  
+  /* Optimize clip-path animations for Firefox */
+  .clip-path-animation {
+    /* Use transform instead of clip-path for better performance */
+    clip-path: none;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  
+  .clip-path-animation.active {
+    transform: scaleX(1);
+  }
+  
+  /* Firefox scroll performance */
+  .firefox-scroll-optimized {
+    scroll-behavior: auto; /* Firefox smooth scroll can be janky */
+  }
+}
+
+/* Edge/Chromium specific optimizations */
+@supports (-ms-ime-align: auto) {
+  .edge-optimized {
+    /* Legacy Edge optimizations */
+    filter: none; /* Avoid filter effects that cause performance issues */
+  }
+}
+
+/* Chrome/Chromium specific optimizations */
+@media screen and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm) {
+  .chrome-optimized {
+    /* Chrome handles transforms well */
+    transform: translateZ(0);
+    will-change: transform, opacity;
+  }
+}
+
+/* Cross-browser GPU acceleration */
+.cross-browser-gpu {
+  /* Standard */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  
+  /* Webkit */
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000px;
+  
+  /* Mozilla */
+  -moz-transform: translateZ(0);
+  -moz-backface-visibility: hidden;
+  -moz-perspective: 1000px;
+  
+  /* Microsoft */
+  -ms-transform: translateZ(0);
+  -ms-backface-visibility: hidden;
+  -ms-perspective: 1000px;
+}
+
+/* Cross-browser transition optimizations */
+.cross-browser-transition {
+  /* Standard */
+  transition-property: transform, opacity, filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Webkit */
+  -webkit-transition-property: -webkit-transform, opacity, -webkit-filter;
+  -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Mozilla */
+  -moz-transition-property: -moz-transform, opacity, -moz-filter;
+  -moz-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Microsoft */
+  -ms-transition-property: -ms-transform, opacity, -ms-filter;
+  -ms-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Cross-browser animation properties */
+.cross-browser-animation {
+  /* Standard */
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Webkit */
+  -webkit-animation-fill-mode: both;
+  -webkit-animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Mozilla */
+  -moz-animation-fill-mode: both;
+  -moz-animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Microsoft */
+  -ms-animation-fill-mode: both;
+  -ms-animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* High refresh rate display optimizations */
+@media (min-resolution: 120dpi) {
+  .high-refresh-optimized {
+    animation-timing-function: linear;
+    transition-timing-function: linear;
+  }
+}
+
+/* Forced colors mode (Windows High Contrast) */
+@media (forced-colors: active) {
+  .forced-colors-optimized {
+    forced-color-adjust: none;
+    border: 1px solid ButtonText;
+    background: ButtonFace;
+    color: ButtonText;
+  }
+  
+  .forced-colors-optimized:focus {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+  
+  .forced-colors-optimized:hover {
+    background: Highlight;
+    color: HighlightText;
+  }
+}
+
+/* Print media - disable all animations */
+@media print {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    background-image: none !important;
+  }
+  
+  .print-hidden {
+    display: none !important;
+  }
+}
+
+/* Container queries for responsive animations */
+@container (max-width: 500px) {
+  .container-responsive {
+    animation-duration: 0.2s;
+    transform: scale(0.9);
+  }
+}
+
+@container (max-width: 300px) {
+  .container-ultra-small {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* Performance monitoring and debugging */
+.performance-debug {
+  position: relative;
+}
+
+.performance-debug::after {
+  content: 'FPS: ' attr(data-fps);
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-family: monospace;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Animation quality levels */
+.animation-quality-low {
+  /* Minimal animations for low-end devices */
+  animation-duration: 0.1s !important;
+  transition-duration: 0.1s !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+.animation-quality-medium {
+  /* Balanced animations */
+  animation-duration: 0.3s !important;
+  transition-duration: 0.3s !important;
+  filter: brightness(1) !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+.animation-quality-high {
+  /* Full-quality animations */
+  animation-duration: var(--animation-duration-normal, 0.5s);
+  transition-duration: var(--transition-duration-normal, 0.5s);
+}
+
+/* Browser-specific reduced motion enhancements */
+@media (prefers-reduced-motion: reduce) {
+  /* Webkit browsers */
+  *::-webkit-scrollbar {
+    scroll-behavior: auto !important;
+  }
+  
+  /* All prefixed properties */
+  *,
+  *::before,
+  *::after {
+    -webkit-animation-duration: 0.01ms !important;
+    -webkit-animation-iteration-count: 1 !important;
+    -webkit-transition-duration: 0.01ms !important;
+    -moz-animation-duration: 0.01ms !important;
+    -moz-animation-iteration-count: 1 !important;
+    -moz-transition-duration: 0.01ms !important;
+    -ms-animation-duration: 0.01ms !important;
+    -ms-animation-iteration-count: 1 !important;
+    -ms-transition-duration: 0.01ms !important;
+  }
+  
+  /* Disable all transform animations */
+  [style*="transform"],
+  [style*="-webkit-transform"],
+  [style*="-moz-transform"],
+  [style*="-ms-transform"] {
+    transform: none !important;
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -ms-transform: none !important;
+  }
+}
+
+/* Accessibility enhancements for cross-browser support */
+.accessible-focus {
+  /* Standard focus outline */
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  
+  /* Webkit focus ring */
+  -webkit-focus-ring-color: #3b82f6;
+  
+  /* Mozilla focus outline */
+  -moz-outline: 2px solid #3b82f6;
+  -moz-outline-offset: 2px;
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .touch-optimized {
+    /* Larger touch targets */
+    min-height: 44px;
+    min-width: 44px;
+    
+    /* Faster animations on touch */
+    animation-duration: 0.2s !important;
+    transition-duration: 0.2s !important;
+    
+    /* Remove hover effects */
+    pointer-events: auto;
+  }
+  
+  .touch-optimized:hover {
+    /* Disable hover effects on touch devices */
+    background: inherit;
+    transform: none;
+    box-shadow: inherit;
+  }
+}
+
+/* Keyboard navigation enhancements */
+.keyboard-navigation-enhanced {
+  /* Ensure focus is always visible */
+  outline: transparent;
+  box-shadow: 0 0 0 2px transparent;
+  transition: box-shadow 0.15s ease;
+}
+
+.keyboard-navigation-enhanced:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+/* Fallback for browsers without :focus-visible */
+.keyboard-navigation-enhanced:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Screen reader optimizations */
+.screen-reader-optimized {
+  /* Ensure content is accessible to screen readers */
+  speak: normal;
+  speak-as: normal;
+}
+
+.screen-reader-optimized[aria-hidden="true"] {
+  speak: none;
+}
+
+/* Animation state announcements for screen readers */
+.animation-state-announcer {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.animation-state-announcer[aria-live="polite"] {
+  /* Polite announcements won't interrupt */
+}
+
+.animation-state-announcer[aria-live="assertive"] {
+  /* Assertive announcements will interrupt */
+}
