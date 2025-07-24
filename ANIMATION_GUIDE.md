@@ -427,7 +427,7 @@ export const SkillBar = ({ skill, percentage }) => (
         <motion.div
           className="skill-fill"
           initial={{ width: 0 }}
-          whileInView={{ width: `${percentage}%` }}
+          whileInView={{ width: `${'${percentage}'}%` }}
           transition={{
             duration: 1.2,
             ease: timingUtils.getEasing('skillBar'),
