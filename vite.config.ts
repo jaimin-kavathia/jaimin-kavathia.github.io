@@ -4,35 +4,28 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => ({
   plugins: [react()],
-  base: '/',
+  base: process.env.NODE_ENV === 'production' ? '/' : '/',
   optimizeDeps: {
     exclude: ['lucide-react'],
     include: ['react', 'react-dom', 'web-vitals'],
+    force: true,
+  },
+  resolve: {
+    dedupe: ['react', 'react-dom'],
+    alias: {
+      'react': 'react',
+      'react-dom': 'react-dom'
+    }
   },
   build: {
     rollupOptions: {
+      external: [],
       output: {
-        manualChunks: (id) => {
-          // Separate vendor chunks for better caching
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'react-vendor';
-            }
-            if (id.includes('lucide-react')) {
-              return 'icons';
-            }
-            if (id.includes('web-vitals')) {
-              return 'performance';
-            }
-            return 'vendor';
-          }
-          // Separate component chunks
-          if (id.includes('src/components/sections')) {
-            return 'sections';
-          }
-          if (id.includes('src/components/ui')) {
-            return 'ui-components';
-          }
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'motion': ['framer-motion'],
+          'icons': ['lucide-react'],
+          'utils': ['web-vitals']
         },
       },
     },
