@@ -10,7 +10,8 @@ import useSectionTransitions from './hooks/useSectionTransitions';
 import { personalInfo } from './data/personalInfo';
 import { initializeAccessibilityEnhancements } from './utils/accessibility';
 import { initializePerformanceOptimization } from './utils/performance';
-import { testEmailJSConfiguration } from './utils/emailTest';
+import { initializeFirebase } from './services/firebase';
+import { logVisit } from './services/analyticsService';
 
 // Lazy load sections for better performance
 const AnimatedHero = lazy(() => import('./components/sections/AnimatedHeroSimple'));
@@ -45,7 +46,7 @@ function App() {
     return () => window.removeEventListener('resize', detectPerformanceMode);
   }, []);
 
-  // Initialize accessibility and performance optimizations
+  // Initialize accessibility, performance, and analytics
   useEffect(() => {
     // Initialize accessibility enhancements
     initializeAccessibilityEnhancements();
@@ -53,14 +54,13 @@ function App() {
     // Initialize performance monitoring and optimization
     initializePerformanceOptimization();
 
-    // Test EmailJS configuration in development
-    if (import.meta.env.DEV) {
-      console.log('🔧 Environment Variables Check:');
-      console.log('VITE_EMAILJS_SERVICE_ID:', import.meta.env.VITE_EMAILJS_SERVICE_ID || '❌ MISSING');
-      console.log('VITE_EMAILJS_TEMPLATE_ID:', import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '❌ MISSING');
-      console.log('VITE_EMAILJS_PUBLIC_KEY:', import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '❌ MISSING');
-      console.log('VITE_EMAILJS_PRIVATE_KEY:', import.meta.env.VITE_EMAILJS_PRIVATE_KEY || '❌ MISSING');
-      testEmailJSConfiguration();
+    // Initialize Firebase and log a visit
+    try {
+      const { db } = initializeFirebase();
+      console.log('✅ Firebase initialized. Firestore ready:', !!db);
+      logVisit();
+    } catch (err) {
+      console.warn('⚠️ Firebase initialization failed:', err);
     }
   }, []);
 

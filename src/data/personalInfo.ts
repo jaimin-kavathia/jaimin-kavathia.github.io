@@ -8,7 +8,7 @@ export const personalInfo: PersonalInfo = {
   email: "jaiminkavathia30@gmail.com",
   phone: "+91 9426690867",
   socialLinks: {
-    github: "https://github.com/jaiminkavathia",
+    github: "https://github.com/jaimin-kavathia",
     linkedin: "https://www.linkedin.com/in/jaimin-kavathia-flutter-developer/",
     twitter: "https://twitter.com/jaiminkavathia",
     portfolio: "https://jaiminkavathia.dev"

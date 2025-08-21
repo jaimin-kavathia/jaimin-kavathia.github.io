@@ -6,10 +6,13 @@ console.log('================================');
 
 console.log('\n📦 Environment Variables:');
 console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('VITE_EMAILJS_SERVICE_ID:', process.env.VITE_EMAILJS_SERVICE_ID ? '✅ Set' : '❌ Missing');
-console.log('VITE_EMAILJS_TEMPLATE_ID:', process.env.VITE_EMAILJS_TEMPLATE_ID ? '✅ Set' : '❌ Missing');
-console.log('VITE_EMAILJS_PUBLIC_KEY:', process.env.VITE_EMAILJS_PUBLIC_KEY ? '✅ Set' : '❌ Missing');
-console.log('VITE_EMAILJS_PRIVATE_KEY:', process.env.VITE_EMAILJS_PRIVATE_KEY ? '✅ Set' : '❌ Missing');
+console.log('VITE_FIREBASE_API_KEY:', process.env.VITE_FIREBASE_API_KEY ? '✅ Set' : '❌ Missing');
+console.log('VITE_FIREBASE_AUTH_DOMAIN:', process.env.VITE_FIREBASE_AUTH_DOMAIN ? '✅ Set' : '❌ Missing');
+console.log('VITE_FIREBASE_PROJECT_ID:', process.env.VITE_FIREBASE_PROJECT_ID ? '✅ Set' : '❌ Missing');
+console.log('VITE_FIREBASE_STORAGE_BUCKET:', process.env.VITE_FIREBASE_STORAGE_BUCKET ? '✅ Set' : '❌ Missing');
+console.log('VITE_FIREBASE_MESSAGING_SENDER_ID:', process.env.VITE_FIREBASE_MESSAGING_SENDER_ID ? '✅ Set' : '❌ Missing');
+console.log('VITE_FIREBASE_APP_ID:', process.env.VITE_FIREBASE_APP_ID ? '✅ Set' : '❌ Missing');
+console.log('VITE_FIREBASE_MEASUREMENT_ID:', process.env.VITE_FIREBASE_MEASUREMENT_ID ? '✅ Set' : '❌ Missing');
 
 console.log('\n🏗️ Build Information:');
 console.log('Platform:', process.platform);

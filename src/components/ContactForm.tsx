@@ -21,7 +21,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose }) => {
     updateField,
     submitForm,
     resetForm,
-    clearMessages
   } = useEmailForm();
   
   console.log('🔥 useEmailForm hook data:', { formData, errors, isLoading, isSuccess, errorMessage });
@@ -278,55 +277,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose }) => {
                     </>
                   )}
                 </button>
-                <button
-                  type="button"
-                  onClick={async () => {
-                    console.log('🔥 DIRECT TEST BUTTON CLICKED!');
-                    try {
-                      // Call the email service directly with test data
-                      console.log('📧 Calling email service directly...');
-                      const { emailService } = await import('../services/emailService');
-                      
-                      // Use the test method
-                      console.log('📧 Running emailService.testEmailService()...');
-                      const result = await emailService.testEmailService();
-                      console.log('📧 Direct test result:', result);
-                      
-                      if (result.success) {
-                        alert('✅ Direct test email sent successfully!');
-                      } else {
-                        alert(`❌ Direct test failed: ${result.message}`);
-                      }
-                    } catch (error) {
-                      console.error('❌ Direct test error:', error);
-                      alert(`❌ Direct test error: ${error}`);
-                    }
-                  }}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors"
-                >
-                  Direct Test
-                </button>
-                <button
-                  type="button"
-                  onClick={async () => {
-                    try {
-                      const { emailService } = await import('../services/emailService');
-                      const config = emailService.getConfig();
-                      const isAvailable = emailService.isServiceAvailable();
-                      
-                      console.log('📧 EmailJS Configuration:', config);
-                      console.log('📧 Service Available:', isAvailable);
-                      
-                      alert(`EmailJS Configuration:\n- Service ID: ${config.serviceId}\n- Template ID: ${config.templateId}\n- Public Key: ${config.publicKey}\n- Service Available: ${isAvailable ? 'Yes' : 'No'}`);
-                    } catch (error) {
-                      console.error('Error checking config:', error);
-                      alert(`Error checking config: ${error}`);
-                    }
-                  }}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-                >
-                  Check Config
-                </button>
+                {/* Removed EmailJS test/config buttons */}
                 <button
                   type="button"
                   onClick={handleClose}

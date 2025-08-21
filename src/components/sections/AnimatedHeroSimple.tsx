@@ -532,7 +532,7 @@ const AnimatedHeroSimple: React.FC<AnimatedHeroProps> = ({ isVisible, onScrollTo
               {personalInfo.name}
               
               {/* Glowing effect behind text */}
-              <motion.div
+              <motion.span
                 className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20 blur-2xl -z-10"
                 animate={prefersReducedMotion ? {} : {
                   scale: [1, 1.2, 1],
@@ -549,7 +549,7 @@ const AnimatedHeroSimple: React.FC<AnimatedHeroProps> = ({ isVisible, onScrollTo
             {/* Floating particles around name */}
             {!prefersReducedMotion && (
               <>
-                <motion.div
+                <motion.span
                   className="absolute -top-4 -left-4 w-2 h-2 bg-blue-400 rounded-full"
                   animate={{
                     y: [0, -20, 0],
@@ -562,7 +562,7 @@ const AnimatedHeroSimple: React.FC<AnimatedHeroProps> = ({ isVisible, onScrollTo
                     ease: "easeInOut",
                   }}
                 />
-                <motion.div
+                <motion.span
                   className="absolute -top-2 -right-6 w-1.5 h-1.5 bg-purple-400 rounded-full"
                   animate={{
                     y: [0, -15, 0],
@@ -576,7 +576,7 @@ const AnimatedHeroSimple: React.FC<AnimatedHeroProps> = ({ isVisible, onScrollTo
                     delay: 0.5,
                   }}
                 />
-                <motion.div
+                <motion.span
                   className="absolute -bottom-2 left-8 w-1 h-1 bg-cyan-400 rounded-full"
                   animate={{
                     y: [0, 15, 0],
@@ -619,7 +619,7 @@ const AnimatedHeroSimple: React.FC<AnimatedHeroProps> = ({ isVisible, onScrollTo
             </motion.span>
             
             {/* Subtle underline animation */}
-            <motion.div
+            <motion.span
               className="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400"
               initial={{ width: 0 }}
               animate={prefersReducedMotion ? { width: 0 } : { width: '60%' }}
