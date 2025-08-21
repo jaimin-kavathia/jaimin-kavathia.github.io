@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+import fs from "fs";
+import path from "path";
+import process from "process";
+
 // Simple script to debug deployment issues
 console.log('🔍 Deployment Debug Information');
 console.log('================================');
