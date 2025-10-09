@@ -1,28 +1,37 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
-import { personalInfo } from '../../data/personalInfo';
-import { manageFocusForNavigation, announceToScreenReader } from '../../utils/accessibility';
-import { useReducedMotion } from '../../hooks/useReducedMotion';
-import { easingFunctions } from '../../utils/easingFunctions';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+} from "framer-motion";
+import { Menu, X } from "lucide-react";
+import { personalInfo } from "../../data/personalInfo";
+import {
+  manageFocusForNavigation,
+  announceToScreenReader,
+} from "../../utils/accessibility";
+import { useReducedMotion } from "../../hooks/useReducedMotion";
+import { easingFunctions } from "../../utils/easingFunctions";
 
 const AnimatedNavigation: React.FC = () => {
-  const [activeSection, setActiveSection] = useState('home');
+  const [activeSection, setActiveSection] = useState("home");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
-  
+
   const { scrollYProgress } = useScroll();
-  const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  const progressWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   const sections = [
-    { id: 'home', label: 'Home' },
-    { id: 'about', label: 'About' },
-    { id: 'skills', label: 'Skills' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'achievements', label: 'Achievements' },
-    { id: 'contact', label: 'Contact' }
+    { id: "home", label: "Home" },
+    { id: "about", label: "About" },
+    { id: "skills", label: "Skills" },
+    { id: "packages", label: "Packages" },
+    { id: "projects", label: "Projects" },
+    { id: "achievements", label: "Achievements" },
+    { id: "contact", label: "Contact" },
   ];
 
   useEffect(() => {
@@ -30,7 +39,15 @@ const AnimatedNavigation: React.FC = () => {
       const scrollPosition = window.scrollY;
       setIsScrolled(scrollPosition > 50);
 
-      const sectionIds = ['home', 'about', 'skills', 'projects', 'achievements', 'contact'];
+      const sectionIds = [
+        "home",
+        "about",
+        "skills",
+        "packages",
+        "projects",
+        "achievements",
+        "contact",
+      ];
       const scrollPos = scrollPosition + 100;
 
       for (const section of sectionIds) {
@@ -38,7 +55,7 @@ const AnimatedNavigation: React.FC = () => {
         if (element) {
           const offsetTop = element.offsetTop;
           const offsetHeight = element.offsetHeight;
-          
+
           if (scrollPos >= offsetTop && scrollPos < offsetTop + offsetHeight) {
             setActiveSection(section);
             break;
@@ -47,8 +64,8 @@ const AnimatedNavigation: React.FC = () => {
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleNavigation = (sectionId: string) => {
@@ -57,8 +74,9 @@ const AnimatedNavigation: React.FC = () => {
 
     setIsMobileMenuOpen(false);
     manageFocusForNavigation(sectionId);
-    
-    const sectionLabel = sections.find(s => s.id === sectionId)?.label || sectionId;
+
+    const sectionLabel =
+      sections.find((s) => s.id === sectionId)?.label || sectionId;
     announceToScreenReader(`Navigated to ${sectionLabel} section`);
 
     const targetPosition = element.offsetTop - 80;
@@ -73,7 +91,9 @@ const AnimatedNavigation: React.FC = () => {
       const progress = Math.min(timeElapsed / duration, 1);
 
       const easeInOutCubic = (t: number): number => {
-        return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+        return t < 0.5
+          ? 4 * t * t * t
+          : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
       };
 
       const easedProgress = easeInOutCubic(progress);
@@ -92,23 +112,23 @@ const AnimatedNavigation: React.FC = () => {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent, sectionId: string) => {
-    if (event.key === 'Enter' || event.key === ' ') {
+    if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       handleNavigation(sectionId);
     }
   };
 
   return (
-    <motion.nav 
+    <motion.nav
       ref={navRef}
       className="fixed top-0 left-0 right-0 z-50"
       role="navigation"
       aria-label="Main navigation"
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ 
+      transition={{
         duration: prefersReducedMotion ? 0.1 : 0.6,
-        ease: easingFunctions.easeOutBack 
+        ease: easingFunctions.easeOutBack,
       }}
     >
       <motion.div
@@ -120,20 +140,22 @@ const AnimatedNavigation: React.FC = () => {
       />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-        <motion.div 
+        <motion.div
           className={`transition-all duration-500 ease-out rounded-2xl shadow-xl ${
-            isScrolled 
-              ? 'backdrop-blur-md bg-white/95 border border-gray-200' 
-              : 'backdrop-blur-sm bg-white/90 border border-gray-100'
+            isScrolled
+              ? "backdrop-blur-md bg-white/95 border border-gray-200"
+              : "backdrop-blur-sm bg-white/90 border border-gray-100"
           }`}
           animate={{
-            backdropFilter: isScrolled ? 'blur(12px)' : 'blur(4px)',
-            backgroundColor: isScrolled ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.9)'
+            backdropFilter: isScrolled ? "blur(12px)" : "blur(4px)",
+            backgroundColor: isScrolled
+              ? "rgba(255, 255, 255, 0.95)"
+              : "rgba(255, 255, 255, 0.9)",
           }}
           transition={{ duration: prefersReducedMotion ? 0.1 : 0.5 }}
         >
           <div className="flex justify-between items-center h-16 px-6">
-            <motion.div 
+            <motion.div
               className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-blue-600 bg-clip-text text-transparent"
               role="banner"
               aria-label={`${personalInfo.name} - Portfolio`}
@@ -151,37 +173,50 @@ const AnimatedNavigation: React.FC = () => {
                   onKeyDown={(e) => handleKeyDown(e, section.id)}
                   className={`relative capitalize transition-all duration-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                     activeSection === section.id
-                      ? 'text-gray-900 font-medium'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? "text-gray-900 font-medium"
+                      : "text-gray-600 hover:text-gray-900"
                   }`}
                   role="menuitem"
-                  aria-current={activeSection === section.id ? 'page' : undefined}
+                  aria-current={
+                    activeSection === section.id ? "page" : undefined
+                  }
                   aria-label={`Navigate to ${section.label} section`}
-                  whileHover={prefersReducedMotion ? {} : { 
-                    scale: 1.05,
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    y: -1
-                  }}
-                  whileFocus={prefersReducedMotion ? {} : { 
-                    scale: 1.02,
-                    backgroundColor: 'rgba(59, 130, 246, 0.15)',
-                    boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.5)'
-                  }}
+                  whileHover={
+                    prefersReducedMotion
+                      ? {}
+                      : {
+                          scale: 1.05,
+                          backgroundColor: "rgba(59, 130, 246, 0.1)",
+                          y: -1,
+                        }
+                  }
+                  whileFocus={
+                    prefersReducedMotion
+                      ? {}
+                      : {
+                          scale: 1.02,
+                          backgroundColor: "rgba(59, 130, 246, 0.15)",
+                          boxShadow: "0 0 0 2px rgba(59, 130, 246, 0.5)",
+                        }
+                  }
                   whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
                 >
                   {section.label}
-                  
+
                   {activeSection === section.id && (
                     <motion.div
                       className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full"
                       layoutId="activeIndicator"
                       initial={{ scaleX: 0, opacity: 0 }}
                       animate={{ scaleX: 1, opacity: 1 }}
-                      transition={{ duration: prefersReducedMotion ? 0.1 : 0.3, ease: "easeOut" }}
+                      transition={{
+                        duration: prefersReducedMotion ? 0.1 : 0.3,
+                        ease: "easeOut",
+                      }}
                     />
                   )}
-                  
+
                   <motion.div
                     className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-400/10 to-purple-500/10 opacity-0"
                     whileHover={prefersReducedMotion ? {} : { opacity: 1 }}
@@ -196,15 +231,27 @@ const AnimatedNavigation: React.FC = () => {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-menu"
-              aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-              whileHover={prefersReducedMotion ? {} : { 
-                scale: 1.1,
-                backgroundColor: 'rgba(156, 163, 175, 0.1)'
-              }}
-              whileFocus={prefersReducedMotion ? {} : { 
-                scale: 1.05,
-                backgroundColor: 'rgba(156, 163, 175, 0.15)'
-              }}
+              aria-label={
+                isMobileMenuOpen
+                  ? "Close navigation menu"
+                  : "Open navigation menu"
+              }
+              whileHover={
+                prefersReducedMotion
+                  ? {}
+                  : {
+                      scale: 1.1,
+                      backgroundColor: "rgba(156, 163, 175, 0.1)",
+                    }
+              }
+              whileFocus={
+                prefersReducedMotion
+                  ? {}
+                  : {
+                      scale: 1.05,
+                      backgroundColor: "rgba(156, 163, 175, 0.15)",
+                    }
+              }
               whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
               transition={{ duration: 0.2 }}
             >
@@ -236,7 +283,7 @@ const AnimatedNavigation: React.FC = () => {
 
           <AnimatePresence>
             {isMobileMenuOpen && (
-              <motion.div 
+              <motion.div
                 id="mobile-menu"
                 className="md:hidden border-t border-gray-200 backdrop-blur-md bg-white/95 overflow-hidden"
                 role="menu"
@@ -244,7 +291,10 @@ const AnimatedNavigation: React.FC = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: prefersReducedMotion ? 0.1 : 0.3, ease: "easeInOut" }}
+                transition={{
+                  duration: prefersReducedMotion ? 0.1 : 0.3,
+                  ease: "easeInOut",
+                }}
               >
                 <div className="px-6 py-4 space-y-2">
                   {sections.map((section, index) => (
@@ -254,46 +304,56 @@ const AnimatedNavigation: React.FC = () => {
                       onKeyDown={(e) => handleKeyDown(e, section.id)}
                       className={`relative block w-full text-left capitalize transition-all duration-300 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                         activeSection === section.id
-                          ? 'text-gray-900 bg-blue-100 backdrop-blur-sm font-medium'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                          ? "text-gray-900 bg-blue-100 backdrop-blur-sm font-medium"
+                          : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                       }`}
                       role="menuitem"
-                      aria-current={activeSection === section.id ? 'page' : undefined}
+                      aria-current={
+                        activeSection === section.id ? "page" : undefined
+                      }
                       aria-label={`Navigate to ${section.label} section`}
                       initial={{ x: -20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
                       transition={{
                         delay: prefersReducedMotion ? 0 : index * 0.05,
                         duration: prefersReducedMotion ? 0.1 : 0.2,
-                        ease: "easeOut"
+                        ease: "easeOut",
                       }}
-                      whileHover={prefersReducedMotion ? {} : { 
-                        x: 4,
-                        backgroundColor: 'rgba(156, 163, 175, 0.15)',
-                        scale: 1.02
-                      }}
-                      whileFocus={prefersReducedMotion ? {} : { 
-                        x: 2,
-                        backgroundColor: 'rgba(156, 163, 175, 0.2)',
-                        boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.5)'
-                      }}
+                      whileHover={
+                        prefersReducedMotion
+                          ? {}
+                          : {
+                              x: 4,
+                              backgroundColor: "rgba(156, 163, 175, 0.15)",
+                              scale: 1.02,
+                            }
+                      }
+                      whileFocus={
+                        prefersReducedMotion
+                          ? {}
+                          : {
+                              x: 2,
+                              backgroundColor: "rgba(156, 163, 175, 0.2)",
+                              boxShadow: "0 0 0 2px rgba(59, 130, 246, 0.5)",
+                            }
+                      }
                       whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
                     >
                       {section.label}
-                      
+
                       {activeSection === section.id && (
                         <motion.div
                           className="absolute left-0 top-1/2 w-1 h-6 bg-gradient-to-b from-blue-400 to-purple-500 rounded-r-full"
                           initial={{ scaleY: 0, x: -4 }}
                           animate={{ scaleY: 1, x: 0 }}
-                          transition={{ 
+                          transition={{
                             duration: prefersReducedMotion ? 0.1 : 0.3,
-                            ease: "easeOut"
+                            ease: "easeOut",
                           }}
-                          style={{ transform: 'translateY(-50%)' }}
+                          style={{ transform: "translateY(-50%)" }}
                         />
                       )}
-                      
+
                       <motion.div
                         className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-400/5 to-purple-500/5 opacity-0"
                         whileHover={prefersReducedMotion ? {} : { opacity: 1 }}

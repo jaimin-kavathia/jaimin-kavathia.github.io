@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 interface UseIntersectionObserverOptions {
   threshold?: number | number[];
@@ -17,6 +17,7 @@ interface SectionVisibility {
   home: boolean;
   about: boolean;
   skills: boolean;
+  packages: boolean;
   projects: boolean;
   achievements: boolean;
   contact: boolean;
@@ -36,7 +37,7 @@ export const useIntersectionObserver = (
   const {
     threshold = 0.3,
     root = null,
-    rootMargin = '0px',
+    rootMargin = "0px",
     triggerOnce = true,
   } = options;
 
@@ -44,17 +45,26 @@ export const useIntersectionObserver = (
     home: false,
     about: false,
     skills: false,
+    packages: false,
     projects: false,
     achievements: false,
     contact: false,
   });
 
   useEffect(() => {
-    const sections = ['home', 'about', 'skills', 'projects', 'achievements', 'contact'];
+    const sections = [
+      "home",
+      "about",
+      "skills",
+      "packages",
+      "projects",
+      "achievements",
+      "contact",
+    ];
     const observers: IntersectionObserver[] = [];
 
     // Set home section as visible by default since it's always loaded
-    setIsVisible(prev => ({ ...prev, home: true }));
+    setIsVisible((prev) => ({ ...prev, home: true }));
 
     const observeSection = (sectionId: string) => {
       const element = document.getElementById(sectionId);
@@ -62,9 +72,9 @@ export const useIntersectionObserver = (
 
       const observer = new IntersectionObserver(
         ([entry]) => {
-          setIsVisible(prev => ({
+          setIsVisible((prev) => ({
             ...prev,
-            [sectionId]: entry.isIntersecting
+            [sectionId]: entry.isIntersecting,
           }));
 
           // If triggerOnce is true, stop observing after first intersection
@@ -97,8 +107,14 @@ export const useIntersectionObserver = (
             const element = node as Element;
             // Check if the added element or its children contain any of our sections
             sections.forEach((sectionId) => {
-              const section = element.id === sectionId ? element : element.querySelector(`#${sectionId}`);
-              if (section && !observers.find(obs => obs === observeSection(sectionId))) {
+              const section =
+                element.id === sectionId
+                  ? element
+                  : element.querySelector(`#${sectionId}`);
+              if (
+                section &&
+                !observers.find((obs) => obs === observeSection(sectionId))
+              ) {
                 const observer = observeSection(sectionId);
                 if (observer) observers.push(observer);
               }
@@ -111,11 +127,11 @@ export const useIntersectionObserver = (
     // Start observing the document for changes
     mutationObserver.observe(document.body, {
       childList: true,
-      subtree: true
+      subtree: true,
     });
 
     return () => {
-      observers.forEach(observer => observer.disconnect());
+      observers.forEach((observer) => observer.disconnect());
       mutationObserver.disconnect();
     };
   }, [threshold, root, rootMargin, triggerOnce]);
@@ -134,12 +150,14 @@ export const useMultipleIntersectionObserver = (
   const [intersections, setIntersections] = useState<boolean[]>(
     new Array(elementsCount).fill(false)
   );
-  const refs = useRef<(HTMLElement | null)[]>(new Array(elementsCount).fill(null));
+  const refs = useRef<(HTMLElement | null)[]>(
+    new Array(elementsCount).fill(null)
+  );
 
   const {
     threshold = 0.1,
     root = null,
-    rootMargin = '0px',
+    rootMargin = "0px",
     triggerOnce = true,
   } = options;
 
@@ -151,7 +169,7 @@ export const useMultipleIntersectionObserver = (
 
       const observer = new IntersectionObserver(
         ([entry]) => {
-          setIntersections(prev => {
+          setIntersections((prev) => {
             const newIntersections = [...prev];
             newIntersections[index] = entry.isIntersecting;
             return newIntersections;
@@ -173,7 +191,7 @@ export const useMultipleIntersectionObserver = (
     });
 
     return () => {
-      observers.forEach(observer => observer.disconnect());
+      observers.forEach((observer) => observer.disconnect());
     };
   }, [threshold, root, rootMargin, triggerOnce]);
 

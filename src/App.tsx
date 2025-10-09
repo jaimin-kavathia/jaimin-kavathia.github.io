@@ -1,25 +1,34 @@
-import { lazy, Suspense, useState, useEffect } from 'react';
-import AnimatedNavigation from './components/sections/AnimatedNavigation';
-import LazySection from './components/LazySection';
-import PageTransition from './components/animations/PageTransition';
-import SectionTransition from './components/animations/SectionTransition';
-import ErrorState from './components/animations/ErrorState';
-import ContactForm from './components/ContactForm';
-import { useIntersectionObserver } from './hooks/useIntersectionObserver';
-import useSectionTransitions from './hooks/useSectionTransitions';
-import { personalInfo } from './data/personalInfo';
-import { initializeAccessibilityEnhancements } from './utils/accessibility';
-import { initializePerformanceOptimization } from './utils/performance';
-import { initializeFirebase } from './services/firebase';
-import { logVisit } from './services/analyticsService';
+import { lazy, Suspense, useState, useEffect } from "react";
+import AnimatedNavigation from "./components/sections/AnimatedNavigation";
+import LazySection from "./components/LazySection";
+import PageTransition from "./components/animations/PageTransition";
+import SectionTransition from "./components/animations/SectionTransition";
+import ErrorState from "./components/animations/ErrorState";
+import ContactForm from "./components/ContactForm";
+import { useIntersectionObserver } from "./hooks/useIntersectionObserver";
+import useSectionTransitions from "./hooks/useSectionTransitions";
+import { personalInfo } from "./data/personalInfo";
+import { initializeAccessibilityEnhancements } from "./utils/accessibility";
+import { initializePerformanceOptimization } from "./utils/performance";
+import { initializeFirebase } from "./services/firebase";
+import { logVisit } from "./services/analyticsService";
 
 // Lazy load sections for better performance
-const AnimatedHero = lazy(() => import('./components/sections/AnimatedHeroSimple'));
-const About = lazy(() => import('./components/sections/About'));
-const AnimatedSkills = lazy(() => import('./components/sections/AnimatedSkills'));
-const AnimatedProjects = lazy(() => import('./components/sections/AnimatedProjects'));
-const AchievementsCertifications = lazy(() => import('./components/sections/AchievementsCertifications'));
-const Contact = lazy(() => import('./components/sections/Contact'));
+const AnimatedHero = lazy(
+  () => import("./components/sections/AnimatedHeroSimple")
+);
+const About = lazy(() => import("./components/sections/About"));
+const AnimatedSkills = lazy(
+  () => import("./components/sections/AnimatedSkills")
+);
+const AnimatedProjects = lazy(
+  () => import("./components/sections/AnimatedProjects")
+);
+const Packages = lazy(() => import("./components/sections/Packages"));
+const AchievementsCertifications = lazy(
+  () => import("./components/sections/AchievementsCertifications")
+);
+const Contact = lazy(() => import("./components/sections/Contact"));
 
 function App() {
   const { isVisible } = useIntersectionObserver();
@@ -33,17 +42,20 @@ function App() {
 
   useEffect(() => {
     const detectPerformanceMode = () => {
-      const isLowEnd = navigator.hardwareConcurrency <= 4 ||
+      const isLowEnd =
+        navigator.hardwareConcurrency <= 4 ||
         (navigator as any).deviceMemory <= 4 ||
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        );
       const isMobile = window.innerWidth <= 768;
 
       setPerformanceMode(isLowEnd || isMobile);
     };
 
     detectPerformanceMode();
-    window.addEventListener('resize', detectPerformanceMode);
-    return () => window.removeEventListener('resize', detectPerformanceMode);
+    window.addEventListener("resize", detectPerformanceMode);
+    return () => window.removeEventListener("resize", detectPerformanceMode);
   }, []);
 
   // Initialize accessibility, performance, and analytics
@@ -57,10 +69,10 @@ function App() {
     // Initialize Firebase and log a visit
     try {
       const { db } = initializeFirebase();
-      console.log('✅ Firebase initialized. Firestore ready:', !!db);
+      console.log("✅ Firebase initialized. Firestore ready:", !!db);
       logVisit();
     } catch (err) {
-      console.warn('⚠️ Firebase initialization failed:', err);
+      console.warn("⚠️ Firebase initialization failed:", err);
     }
   }, []);
 
@@ -71,8 +83,6 @@ function App() {
     }, 50); // Very short delay to avoid gradient loading
     return () => clearTimeout(timer);
   }, []);
-
-
 
   const handleRetry = () => {
     setHasError(false);
@@ -98,59 +108,106 @@ function App() {
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 bg-gray-900 text-white px-4 py-2 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
           onClick={(e) => {
             e.preventDefault();
-            smoothScrollToSection('main-content');
+            smoothScrollToSection("main-content");
           }}
         >
           Skip to main content
         </a>
 
-
         {/* Navigation */}
         <AnimatedNavigation />
 
         {/* Main Content */}
-        <main id="main-content" tabIndex={-1} role="main" aria-label="Portfolio content">
+        <main
+          id="main-content"
+          tabIndex={-1}
+          role="main"
+          aria-label="Portfolio content"
+        >
           {/* Hero Section - Always load immediately */}
-          <SectionTransition id="home" animationType="fade" optimizeForMobile={performanceMode}>
-            <Suspense fallback={
-              <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500/30"></div>
-              </div>
-            }>
-              <AnimatedHero isVisible={isVisible.home} onScrollToSection={smoothScrollToSection} />
+          <SectionTransition
+            id="home"
+            animationType="fade"
+            optimizeForMobile={performanceMode}
+          >
+            <Suspense
+              fallback={
+                <div className="min-h-screen flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500/30"></div>
+                </div>
+              }
+            >
+              <AnimatedHero
+                isVisible={isVisible.home}
+                onScrollToSection={smoothScrollToSection}
+              />
             </Suspense>
           </SectionTransition>
 
           {/* About Section */}
-          <SectionTransition id="about" animationType="slide" direction="up" optimizeForMobile={performanceMode}>
+          <SectionTransition
+            id="about"
+            animationType="slide"
+            direction="up"
+            optimizeForMobile={performanceMode}
+          >
             <LazySection rootMargin="150px 0px">
               <About isVisible={isVisible.about} />
             </LazySection>
           </SectionTransition>
 
           {/* Skills Section */}
-          <SectionTransition id="skills" animationType="slide" direction="left" optimizeForMobile={performanceMode}>
+          <SectionTransition
+            id="skills"
+            animationType="fade"
+            optimizeForMobile={performanceMode}
+          >
             <LazySection rootMargin="100px 0px">
               <AnimatedSkills isVisible={isVisible.skills} />
             </LazySection>
           </SectionTransition>
 
+          {/* Packages Section */}
+          <SectionTransition
+            id="packages"
+            animationType="fade"
+            optimizeForMobile={performanceMode}
+          >
+            <LazySection rootMargin="100px 0px">
+              <Packages isVisible={isVisible.packages} />
+            </LazySection>
+          </SectionTransition>
+
           {/* Projects Section */}
-          <SectionTransition id="projects" animationType="scale" optimizeForMobile={performanceMode}>
+          <SectionTransition
+            id="projects"
+            animationType="scale"
+            optimizeForMobile={performanceMode}
+          >
             <LazySection rootMargin="100px 0px">
               <AnimatedProjects isVisible={isVisible.projects} />
             </LazySection>
           </SectionTransition>
 
           {/* Achievements & Certifications Section */}
-          <SectionTransition id="achievements" animationType="slide" direction="up" optimizeForMobile={performanceMode}>
+          <SectionTransition
+            id="achievements"
+            animationType="slide"
+            direction="up"
+            optimizeForMobile={performanceMode}
+          >
             <LazySection rootMargin="100px 0px">
               <AchievementsCertifications isVisible={isVisible.achievements} />
             </LazySection>
           </SectionTransition>
 
           {/* Contact Section */}
-          <SectionTransition id="contact" animationType="slide" direction="up" optimizeForMobile={performanceMode}>
+          <SectionTransition
+            id="contact"
+            animationType="slide"
+            direction="up"
+            optimizeForMobile={performanceMode}
+          >
             <LazySection rootMargin="50px 0px">
               <Contact isVisible={isVisible.contact} />
             </LazySection>
@@ -173,9 +230,7 @@ function App() {
                 >
                   {personalInfo.name}
                 </div>
-                <p className="text-gray-600 mb-6">
-                  {personalInfo.tagline}
-                </p>
+                <p className="text-gray-600 mb-6">{personalInfo.tagline}</p>
                 <nav
                   className="flex justify-center space-x-6 mb-6"
                   aria-label="Social media links"
@@ -217,6 +272,26 @@ function App() {
                       <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                     </svg>
                   </a>
+                  {personalInfo.socialLinks.medium && (
+                    <a
+                      href={personalInfo.socialLinks.medium}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="backdrop-blur-sm bg-gray-100 border border-gray-300 p-3 rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-200 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                      aria-label="Visit Medium profile (opens in new tab)"
+                    >
+                      <svg
+                        className="w-6 h-6"
+                        viewBox="0 0 1043.63 592.71"
+                        fill="currentColor"
+                        aria-hidden="true"
+                        role="img"
+                      >
+                        <title>Medium</title>
+                        <path d="M588.67 296.35c0 163.67-131.27 296.36-293.83 296.36S1 460.02 1 296.35 132.27 0 294.84 0s293.83 132.69 293.83 296.35zM887.75 296.35c0 154.22-65.64 279.27-146.63 279.27s-146.63-125.05-146.63-279.27S660.13 17.08 741.12 17.08 887.75 142.13 887.75 296.35zM1042.63 296.35c0 141.43-23.31 255.98-52.06 255.98s-52.06-114.55-52.06-255.98 23.31-255.98 52.06-255.98 52.06 114.55 52.06 255.98z" />
+                      </svg>
+                    </a>
+                  )}
                   <button
                     onClick={() => setIsContactFormOpen(true)}
                     className="backdrop-blur-sm bg-gray-100 border border-gray-300 p-3 rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-200 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -231,12 +306,20 @@ function App() {
                       role="img"
                     >
                       <title>Email</title>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                      />
                     </svg>
                   </button>
                 </nav>
                 <div className="pt-6 border-t border-gray-200 text-gray-500 text-sm">
-                  <p role="text" aria-label={`Copyright 2024 ${personalInfo.name}. All rights reserved.`}>
+                  <p
+                    role="text"
+                    aria-label={`Copyright 2024 ${personalInfo.name}. All rights reserved.`}
+                  >
                     © 2024 {personalInfo.name}. All rights reserved.
                   </p>
                 </div>
@@ -246,19 +329,18 @@ function App() {
         </footer>
 
         {/* Contact Form Modal */}
-        <ContactForm 
-          isOpen={isContactFormOpen} 
-          onClose={() => setIsContactFormOpen(false)} 
+        <ContactForm
+          isOpen={isContactFormOpen}
+          onClose={() => setIsContactFormOpen(false)}
         />
 
-
-
         {/* Performance Monitor (development only) */}
-        {typeof window !== 'undefined' && window.location.hostname === 'localhost' && (
-          <div className="fixed top-4 right-4 z-50 bg-black/80 text-white text-xs p-2 rounded">
-            Dev Mode
-          </div>
-        )}
+        {typeof window !== "undefined" &&
+          window.location.hostname === "localhost" && (
+            <div className="fixed top-4 right-4 z-50 bg-black/80 text-white text-xs p-2 rounded">
+              Dev Mode
+            </div>
+          )}
       </div>
     </PageTransition>
   );
