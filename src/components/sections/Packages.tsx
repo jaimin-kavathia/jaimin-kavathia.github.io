@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { Github, ExternalLink } from "lucide-react";
 import { packages } from "../../data/packages";
 
@@ -14,28 +15,45 @@ const Packages: React.FC<PackagesProps> = ({ isVisible }) => {
       role="main"
       aria-labelledby="packages-heading"
     >
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-site">
         <div
           className={`transform transition-all duration-700 ${
             isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
           }`}
         >
-          <header className="text-center mb-10">
-            <h2
-              id="packages-heading"
-              className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-600 to-purple-600 bg-clip-text text-transparent"
-            >
-              Open-source Package — built by me
-            </h2>
+          <header className="text-center mb-16">
+            <div className="backdrop-blur-md bg-white/80 border border-gray-200 rounded-3xl p-8 inline-block shadow-xl max-w-4xl mx-auto">
+              <motion.h2
+                id="packages-heading"
+                className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-gray-900 via-blue-600 to-purple-600 bg-clip-text text-transparent"
+                initial={{ backgroundPosition: "200% 0" }}
+                animate={{ backgroundPosition: "-200% 0" }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "linear" as const,
+                }}
+                style={{ backgroundSize: "200% 100%" }}
+              >
+                Open-source Package — built by me
+              </motion.h2>
+              <motion.p
+                className="text-gray-600 text-lg max-w-2xl mx-auto"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+              >
+                Reusable utilities and components published as open-source
+                packages
+              </motion.p>
+            </div>
           </header>
 
-          {(() => {
-            const pkg = packages[0];
-            if (!pkg) return null;
-
-            return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {packages.map((pkg) => (
               <article
-                className="mx-auto max-w-3xl rounded-2xl shadow-[0_10px_40px_rgba(2,6,23,0.12)] overflow-hidden border border-gray-200 bg-white"
+                key={pkg.id}
+                className="h-full rounded-2xl shadow-[0_10px_40px_rgba(2,6,23,0.12)] overflow-hidden border border-gray-200 bg-white"
                 role="article"
                 aria-labelledby={`${pkg.id}-title`}
               >
@@ -73,22 +91,19 @@ const Packages: React.FC<PackagesProps> = ({ isVisible }) => {
                           ))}
                         </div>
                       </div>
+                      {/* Feature bullets can remain generic here */}
                       <ul className="grid gap-2 text-sm text-gray-700">
                         <li className="flex items-start gap-2">
                           <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-500"></span>
-                          Adaptive UI for iOS and Android
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-500"></span>
-                          Camera and Gallery support
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-500"></span>
-                          Permissions handling included
+                          Adaptive UI and thoughtful UX
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-500"></span>
                           Lightweight and customizable
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+                          Production-ready APIs
                         </li>
                       </ul>
                     </div>
@@ -135,14 +150,12 @@ const Packages: React.FC<PackagesProps> = ({ isVisible }) => {
                           </a>
                         )}
                       </nav>
-
-                      {/* no bullets on the buttons column */}
                     </div>
                   </div>
                 </div>
               </article>
-            );
-          })()}
+            ))}
+          </div>
         </div>
       </div>
     </section>

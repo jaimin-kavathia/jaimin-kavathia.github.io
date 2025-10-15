@@ -1,9 +1,15 @@
 /* Import performance and accessibility optimizations */
-@import './styles/performance-optimizations.css';
+@import "./styles/performance-optimizations.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .container-site {
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
 
 /* Animation keyframes for portfolio animations */
 @keyframes fadeInUp {
@@ -56,7 +62,8 @@ html {
 }
 
 /* Consistent light theme background to prevent flickering */
-html, body {
+html,
+body {
   background-color: #ffffff;
   min-height: 100vh;
 }
@@ -84,15 +91,15 @@ html, body {
   .text-gray-600 {
     color: rgba(0, 0, 0, 0.9) !important;
   }
-  
+
   .text-gray-500 {
     color: rgba(0, 0, 0, 0.8) !important;
   }
-  
+
   .text-gray-700 {
     color: rgba(0, 0, 0, 1) !important;
   }
-  
+
   .border-gray-200,
   .border-gray-300 {
     border-color: rgba(0, 0, 0, 0.3) !important;

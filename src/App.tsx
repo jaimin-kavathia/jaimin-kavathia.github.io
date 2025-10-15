@@ -156,16 +156,8 @@ function App() {
             </LazySection>
           </SectionTransition>
 
-          {/* Skills Section */}
-          <SectionTransition
-            id="skills"
-            animationType="fade"
-            optimizeForMobile={performanceMode}
-          >
-            <LazySection rootMargin="100px 0px">
-              <AnimatedSkills isVisible={isVisible.skills} />
-            </LazySection>
-          </SectionTransition>
+          {/* Skills Section (temporarily hidden) */}
+          <div id="skills" className="hidden" aria-hidden="true" />
 
           {/* Packages Section */}
           <SectionTransition

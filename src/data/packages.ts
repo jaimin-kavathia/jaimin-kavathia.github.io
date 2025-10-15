@@ -13,4 +13,21 @@ export const packages: PackageItem[] = [
     blogUrl:
       "https://medium.com/@jaiminkavathia30/flutters-missing-piece-effortless-media-picking-with-limited-access-support-9a1a24404667",
   },
+  {
+    id: "smart-permission",
+    name: "smart_permission",
+    description:
+      "Flutter runtime permissions made easy: one-line requests, adaptive dialogs, and full flows on Android & iOS.",
+    version: "^0.0.3",
+    technologies: [
+      "Flutter",
+      "Dart",
+      "permission_handler",
+      "Adaptive Dialogs",
+      "Analytics",
+    ],
+    githubUrl: "https://github.com/jaimin-kavathia/smart_permission",
+    pubDevUrl: "https://pub.dev/packages/smart_permission",
+    blogUrl: "https://jaimin-kavathia.github.io/",
+  },
 ];
