@@ -17,7 +17,7 @@ export const packages: PackageItem[] = [
     id: "smart-permission",
     name: "smart_permission",
     description:
-      "Flutter runtime permissions made easy: one-line requests, adaptive dialogs, and full flows on Android & iOS.",
+      "Flutter runtime permissions made easy: one-line requests, adaptive dialogs, and full flows on Web, Windows,Android & iOS.",
     version: "^0.0.3",
     technologies: [
       "Flutter",
