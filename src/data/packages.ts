@@ -28,6 +28,7 @@ export const packages: PackageItem[] = [
     ],
     githubUrl: "https://github.com/jaimin-kavathia/smart_permission",
     pubDevUrl: "https://pub.dev/packages/smart_permission",
-    blogUrl: "https://jaimin-kavathia.github.io/",
+    blogUrl:
+      "https://medium.com/@jaiminkavathia30/introducing-smart-permission-runtime-permissions-made-effortless-in-flutter-30f4785a588f",
   },
 ];
