@@ -76,14 +76,16 @@ Each page sets its own title, description and canonical URL, and publishes schem
 
 The hire page describes how you work with clients. Read `src/data/hire.ts` and change anything that is not how you actually take on work.
 
-### After deploying: tell search engines
+### Search engines
 
-1. Open [Google Search Console](https://search.google.com/search-console), add the property `https://jaimin-kavathia.github.io/` and choose the **HTML tag** method.
-2. Copy the code from the tag's `content="..."` into `googleSiteVerification` in `src/data/site.ts`, then commit and push.
-3. Back in Search Console press **Verify**, then submit `sitemap.xml` under **Sitemaps**.
-4. Use **URL inspection → Request indexing** for the home page and the hire page.
+Google Search Console is set up for `https://jaimin-kavathia.github.io/`. Ownership is proved by the file `public/google7d159be857f1c52e.html`: **do not delete or rename it**, or the property loses verification.
 
-Bing Webmaster Tools works the same way through `bingSiteVerification`.
+When you add a new page:
+
+1. Add it to `src/pages/sitemap.xml.ts` if it is not picked up from the data files.
+2. After deploying, open [Search Console](https://search.google.com/search-console), paste the new URL into **URL inspection** and press **Request indexing**.
+
+Bing Webmaster Tools can import the site straight from Search Console, or be verified with `bingSiteVerification` in `src/data/site.ts`.
 
 ## Structure
 
