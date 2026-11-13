@@ -78,14 +78,18 @@ The hire page describes how you work with clients. Read `src/data/hire.ts` and c
 
 ### Search engines
 
-Google Search Console is set up for `https://jaimin-kavathia.github.io/`. Ownership is proved by the file `public/google7d159be857f1c52e.html`: **do not delete or rename it**, or the property loses verification.
+The site `https://jaimin-kavathia.github.io/` is registered with both search consoles, under the same Google account. Each one proves ownership with a file in `public/`. **Do not delete or rename either file**, or that console loses verification.
+
+| Console | Covers | Ownership file |
+| --- | --- | --- |
+| [Google Search Console](https://search.google.com/search-console) | Google | `public/google7d159be857f1c52e.html` |
+| [Bing Webmaster Tools](https://www.bing.com/webmasters) (sign in with Google) | Bing, and the engines that use its index: Yahoo, DuckDuckGo, Microsoft Copilot | `public/BingSiteAuth.xml` |
 
 When you add a new page:
 
 1. Add it to `src/pages/sitemap.xml.ts` if it is not picked up from the data files.
-2. After deploying, open [Search Console](https://search.google.com/search-console), paste the new URL into **URL inspection** and press **Request indexing**.
-
-Bing Webmaster Tools can import the site straight from Search Console, or be verified with `bingSiteVerification` in `src/data/site.ts`.
+2. After deploying, open Search Console, paste the new URL into **URL inspection** and press **Request indexing**.
+3. In Bing Webmaster Tools, open **URL submission** and submit the same URL.
 
 ## Structure
 
