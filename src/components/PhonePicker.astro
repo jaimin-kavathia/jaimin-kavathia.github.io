@@ -1,0 +1,495 @@
+---
+/** Animated mock of adaptive_media_picker: source sheet, gallery, three picks. */
+import Icon from './Icon.astro';
+
+const tiles = [
+  'linear-gradient(150deg,#ffb38a,#e8697d)',
+  'linear-gradient(150deg,#8fd0ff,#4f6fd8)',
+  'linear-gradient(150deg,#a6ecc9,#2f9c8c)',
+  'linear-gradient(150deg,#f6d58c,#e8914a)',
+  'linear-gradient(150deg,#cdb2ff,#6f63e0)',
+  'linear-gradient(150deg,#ffa9cf,#c2579a)',
+  'linear-gradient(150deg,#9be3f0,#3d86c4)',
+  'linear-gradient(150deg,#e2e6ef,#8b93a8)',
+  'linear-gradient(150deg,#ffd2a8,#c9744f)',
+];
+/** Tiles that get picked, in order (index into `tiles`). */
+const picks = [1, 4, 6];
+---
+
+<div class="phone" aria-hidden="true">
+  <div class="phone__screen">
+    <span class="phone__island"></span>
+    <div class="ui">
+      <div class="ui__status mono">
+        <span>9:41</span>
+        <span class="ui__signal"><i></i><i></i><i></i></span>
+      </div>
+      <div class="ui__bar"><span class="ui__back"></span>New post</div>
+
+      <div class="pk">
+        <div class="pk__drop">
+          <span class="pk__empty"><Icon name="image" />Add photos</span>
+          {picks.map((pick, index) => <span class={`pk__thumb pk__thumb--${index + 1}`} style={`background:${tiles[pick]}`} />)}
+        </div>
+        <span class="ui__line" style="width:72%"></span>
+        <span class="ui__line ui__line--dim" style="width:46%"></span>
+        <div class="ui__btn">Add media<span class="tap pk__tap1"></span></div>
+      </div>
+
+      <div class="ui__scrim pk__scrim"></div>
+
+      <div class="pk__sheet">
+        <span class="pk__grab"></span>
+        <div class="pk__row"><span class="pk__row-icon"><Icon name="camera" /></span>Camera</div>
+        <div class="pk__row">
+          <span class="pk__row-icon"><Icon name="image" /></span>Gallery<span class="tap pk__tap2"></span>
+        </div>
+      </div>
+
+      <div class="pk__gallery">
+        <span class="pk__grab"></span>
+        <div class="pk__gallery-head">
+          <span>Select up to 3</span>
+          <span class="pk__done">Done<span class="tap pk__tap3"></span></span>
+        </div>
+        <div class="pk__grid">
+          {
+            tiles.map((tile, index) => (
+              <span class="pk__tile" style={`background:${tile}`}>
+                {picks.includes(index) && (
+                  <i class={`pk__check pk__check--${picks.indexOf(index) + 1}`}>{picks.indexOf(index) + 1}</i>
+                )}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .pk {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 16px 0;
+  }
+
+  .pk__drop {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    align-items: stretch;
+    height: 132px;
+    margin-bottom: 4px;
+    padding: 8px;
+    border: 1.5px dashed rgb(255 255 255 / 0.16);
+    border-radius: 16px;
+  }
+
+  .pk__empty {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 6px;
+    font-size: 10.5px;
+    color: #8d8f9c;
+  }
+
+  .pk__empty .icon {
+    width: 22px;
+    height: 22px;
+    stroke-width: 1.5;
+  }
+
+  .pk__thumb {
+    border-radius: 10px;
+    opacity: 0;
+  }
+
+  .pk .ui__btn {
+    margin-top: 10px;
+  }
+
+  .pk__scrim {
+    opacity: 0;
+  }
+
+  .pk__sheet,
+  .pk__gallery {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 8px 12px 16px;
+    border-top: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 22px 22px 0 0;
+    background: #1d1e25;
+    transform: translateY(105%);
+  }
+
+  .pk__grab {
+    display: block;
+    width: 34px;
+    height: 4px;
+    margin: 0 auto 10px;
+    border-radius: 4px;
+    background: rgb(255 255 255 / 0.2);
+  }
+
+  .pk__row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 44px;
+    padding: 0 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .pk__row + .pk__row {
+    margin-top: 2px;
+    background: rgb(255 255 255 / 0.05);
+  }
+
+  .pk__row-icon {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .pk__row-icon .icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .pk__row .tap {
+    left: 62%;
+  }
+
+  .pk__gallery {
+    padding-bottom: 14px;
+  }
+
+  .pk__gallery-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 0 2px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .pk__done {
+    position: relative;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  .pk__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+
+  .pk__tile {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 9px;
+  }
+
+  .pk__check {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid #fff;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-size: 9.5px;
+    font-style: normal;
+    font-weight: 700;
+    transform: scale(0);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .pk__tap1 {
+      animation: pk-tap1 10s linear infinite;
+    }
+    .pk__tap2 {
+      animation: pk-tap2 10s linear infinite;
+    }
+    .pk__tap3 {
+      animation: pk-tap3 10s linear infinite;
+    }
+    .pk__scrim {
+      animation: pk-scrim 10s var(--ease-in-out) infinite;
+    }
+    .pk__sheet {
+      animation: pk-sheet 10s var(--ease-out) infinite;
+    }
+    .pk__gallery {
+      animation: pk-gallery 10s var(--ease-out) infinite;
+    }
+    .pk__check--1 {
+      animation: pk-check-1 10s var(--ease-out) infinite;
+    }
+    .pk__check--2 {
+      animation: pk-check-2 10s var(--ease-out) infinite;
+    }
+    .pk__check--3 {
+      animation: pk-check-3 10s var(--ease-out) infinite;
+    }
+    .pk__empty {
+      animation: pk-empty 10s ease infinite;
+    }
+    .pk__thumb--1 {
+      animation: pk-thumb-1 10s var(--ease-out) infinite;
+    }
+    .pk__thumb--2 {
+      animation: pk-thumb-2 10s var(--ease-out) infinite;
+    }
+    .pk__thumb--3 {
+      animation: pk-thumb-3 10s var(--ease-out) infinite;
+    }
+  }
+
+  /* With motion off, show the gallery mid-selection. */
+  @media (prefers-reduced-motion: reduce) {
+    .pk__scrim {
+      opacity: 1;
+    }
+    .pk__gallery,
+    .pk__check {
+      transform: none;
+    }
+  }
+
+  @keyframes pk-tap1 {
+    0%,
+    4% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    7% {
+      opacity: 0.9;
+      transform: scale(1);
+    }
+    11%,
+    100% {
+      opacity: 0;
+      transform: scale(1.7);
+    }
+  }
+
+  @keyframes pk-tap2 {
+    0%,
+    21% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    24% {
+      opacity: 0.9;
+      transform: scale(1);
+    }
+    28%,
+    100% {
+      opacity: 0;
+      transform: scale(1.7);
+    }
+  }
+
+  @keyframes pk-tap3 {
+    0%,
+    56% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    59% {
+      opacity: 0.9;
+      transform: scale(1);
+    }
+    63%,
+    100% {
+      opacity: 0;
+      transform: scale(1.7);
+    }
+  }
+
+  @keyframes pk-scrim {
+    0%,
+    11% {
+      opacity: 0;
+    }
+    16%,
+    62% {
+      opacity: 1;
+    }
+    67%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes pk-sheet {
+    0%,
+    11% {
+      transform: translateY(105%);
+    }
+    18%,
+    27% {
+      transform: none;
+    }
+    33%,
+    100% {
+      transform: translateY(105%);
+    }
+  }
+
+  @keyframes pk-gallery {
+    0%,
+    30% {
+      transform: translateY(105%);
+    }
+    38%,
+    62% {
+      transform: none;
+    }
+    68%,
+    100% {
+      transform: translateY(105%);
+    }
+  }
+
+  @keyframes pk-check-1 {
+    0%,
+    41% {
+      transform: scale(0);
+    }
+    44%,
+    68% {
+      transform: none;
+    }
+    69%,
+    100% {
+      transform: scale(0);
+    }
+  }
+
+  @keyframes pk-check-2 {
+    0%,
+    46% {
+      transform: scale(0);
+    }
+    49%,
+    68% {
+      transform: none;
+    }
+    69%,
+    100% {
+      transform: scale(0);
+    }
+  }
+
+  @keyframes pk-check-3 {
+    0%,
+    51% {
+      transform: scale(0);
+    }
+    54%,
+    68% {
+      transform: none;
+    }
+    69%,
+    100% {
+      transform: scale(0);
+    }
+  }
+
+  @keyframes pk-empty {
+    0%,
+    64% {
+      opacity: 1;
+    }
+    67%,
+    94% {
+      opacity: 0;
+    }
+    99%,
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes pk-thumb-1 {
+    0%,
+    66% {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+    71%,
+    92% {
+      opacity: 1;
+      transform: none;
+    }
+    96%,
+    100% {
+      opacity: 0;
+      transform: none;
+    }
+  }
+
+  @keyframes pk-thumb-2 {
+    0%,
+    68% {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+    73%,
+    92% {
+      opacity: 1;
+      transform: none;
+    }
+    96%,
+    100% {
+      opacity: 0;
+      transform: none;
+    }
+  }
+
+  @keyframes pk-thumb-3 {
+    0%,
+    70% {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+    75%,
+    92% {
+      opacity: 1;
+      transform: none;
+    }
+    96%,
+    100% {
+      opacity: 0;
+      transform: none;
+    }
+  }
+</style>

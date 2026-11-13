@@ -1,0 +1,323 @@
+---
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+import Split from './Split.astro';
+---
+
+<section class="contact defer" id="contact" aria-labelledby="contact-title">
+  <div class="contact__stage" data-play>
+    <div class="contact__aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <div class="contact__inner">
+      <p class="eyebrow" data-reveal><span class="eyebrow__dot"></span>Contact</p>
+      <h2 class="display contact__title" id="contact-title" data-split>
+        <Split text="Have an app in mind? *Let's build it.*" />
+      </h2>
+      <p class="lede contact__lede" data-reveal style="--d:150ms">
+        Tell me what you are making, and we can work out how I can help.
+      </p>
+
+      <div class="contact__ways">
+        <div class="way card" data-spot data-reveal style="--d:200ms">
+          <a class="way__link" href={`mailto:${site.email}`}>
+            <span class="way__icon" aria-hidden="true"><Icon name="mail" /></span>
+            <span class="way__text">
+              <span class="way__label mono">Email</span>
+              <span class="way__value">{site.email}</span>
+            </span>
+            <span class="way__go" aria-hidden="true"><Icon name="arrow-up-right" /></span>
+          </a>
+          <button type="button" class="way__copy mono" data-copy={site.email}>
+            <span class="way__copy-idle"><Icon name="copy" />Copy</span>
+            <span class="way__copy-done" aria-hidden="true"><Icon name="check" />Copied</span>
+            <span class="sr-only"> email address</span>
+          </button>
+        </div>
+
+        <div class="way card" data-spot data-reveal style="--d:290ms">
+          <a class="way__link" href={`tel:${site.phoneHref}`}>
+            <span class="way__icon" aria-hidden="true"><Icon name="phone" /></span>
+            <span class="way__text">
+              <span class="way__label mono">Phone</span>
+              <span class="way__value">{site.phone}</span>
+            </span>
+            <span class="way__go" aria-hidden="true"><Icon name="arrow-up-right" /></span>
+          </a>
+          <button type="button" class="way__copy mono" data-copy={site.phoneHref}>
+            <span class="way__copy-idle"><Icon name="copy" />Copy</span>
+            <span class="way__copy-done" aria-hidden="true"><Icon name="check" />Copied</span>
+            <span class="sr-only"> phone number</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .contact {
+    padding: 0 12px;
+  }
+
+  .contact__stage {
+    position: relative;
+    isolation: isolate;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    background: #060608;
+    overflow: hidden;
+  }
+
+  .contact__stage:not(.is-playing) .contact__aurora i {
+    animation-play-state: paused;
+  }
+
+  .contact__stage .grain {
+    z-index: -1;
+  }
+
+  .contact__aurora {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+  }
+
+  .contact__aurora i {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    will-change: transform;
+  }
+
+  .contact__aurora i:nth-child(1) {
+    top: -30%;
+    left: -12%;
+    width: 52%;
+    aspect-ratio: 1;
+    background: rgb(196 208 232 / 0.3);
+    animation: aurora-a 18s var(--ease-in-out) infinite alternate;
+  }
+
+  .contact__aurora i:nth-child(2) {
+    right: -14%;
+    bottom: -42%;
+    width: 58%;
+    aspect-ratio: 1;
+    background: rgb(124 200 255 / 0.26);
+    animation: aurora-b 22s var(--ease-in-out) infinite alternate;
+  }
+
+  .contact__aurora i:nth-child(3) {
+    top: 10%;
+    right: 8%;
+    width: 22%;
+    aspect-ratio: 1;
+    background: rgb(255 179 138 / 0.14);
+    animation: aurora-a 26s var(--ease-in-out) infinite alternate-reverse;
+  }
+
+  @keyframes aurora-a {
+    to {
+      transform: translate(22%, 26%) scale(1.25);
+    }
+  }
+
+  @keyframes aurora-b {
+    to {
+      transform: translate(-26%, -22%) scale(0.85);
+    }
+  }
+
+  .contact__inner {
+    display: grid;
+    justify-items: center;
+    gap: clamp(1.25rem, 2.4vw, 1.9rem);
+    width: min(100% - 2 * var(--gutter), 1040px);
+    margin-inline: auto;
+    padding-block: clamp(72px, 11vw, 150px) clamp(40px, 6vw, 72px);
+    text-align: center;
+  }
+
+  .contact__title {
+    max-width: 14ch;
+  }
+
+  .contact__lede {
+    max-width: 44ch;
+  }
+
+  .contact__ways {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(12px, 1.6vw, 20px);
+    width: 100%;
+    margin-top: clamp(1.25rem, 4vw, 3rem);
+    text-align: left;
+  }
+
+  .way {
+    display: flex;
+    flex-direction: column;
+    container-type: inline-size;
+    border-radius: 24px;
+    background: rgb(10 10 12 / 0.55);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    transition: border-color 0.4s;
+  }
+
+  .way:hover {
+    border-color: var(--line-2);
+  }
+
+  .way__link {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'icon go'
+      'text text';
+    align-items: center;
+    gap: clamp(1.4rem, 3vw, 2.4rem) 1rem;
+    flex: 1;
+    padding: clamp(18px, 2.4vw, 28px);
+  }
+
+  .way__icon {
+    grid-area: icon;
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border: 1px solid var(--line-2);
+    border-radius: 16px;
+    background: rgb(255 255 255 / 0.05);
+    color: var(--accent);
+  }
+
+  .way__icon .icon {
+    width: 22px;
+    height: 22px;
+    stroke-width: 1.5;
+  }
+
+  .way__text {
+    grid-area: text;
+    display: grid;
+    gap: 0.3rem;
+    min-width: 0;
+  }
+
+  .way__label {
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .way__value {
+    font-size: clamp(1rem, 6.1cqi, 1.75rem);
+    font-weight: 300;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+  }
+
+  .way__go {
+    grid-area: go;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.07);
+    transition:
+      background-color 0.4s,
+      color 0.4s,
+      transform 0.6s var(--ease-out);
+  }
+
+  .way__go .icon {
+    width: 17px;
+    height: 17px;
+  }
+
+  .way__link:hover .way__go {
+    background: var(--text);
+    color: #08080a;
+    transform: rotate(45deg);
+  }
+
+  .way__copy {
+    position: relative;
+    display: grid;
+    justify-items: start;
+    padding: 0.8rem clamp(18px, 2.4vw, 28px);
+    border-top: 1px solid var(--line);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    text-align: left;
+    transition:
+      color 0.3s,
+      background-color 0.3s;
+  }
+
+  .way__copy:hover {
+    background: rgb(255 255 255 / 0.04);
+    color: var(--text);
+  }
+
+  .way__copy:focus-visible {
+    outline-offset: -3px;
+    border-radius: 0 0 24px 24px;
+  }
+
+  .way__copy-idle,
+  .way__copy-done {
+    grid-area: 1 / 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    transition:
+      opacity 0.3s,
+      transform 0.4s var(--ease-out);
+  }
+
+  .way__copy .icon {
+    width: 13px;
+    height: 13px;
+  }
+
+  .way__copy-done {
+    color: var(--ok);
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  .way__copy[data-copied] .way__copy-idle {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  .way__copy[data-copied] .way__copy-done {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (max-width: 760px) {
+    .contact {
+      padding-inline: 8px;
+    }
+
+    .contact__stage {
+      border-radius: 22px;
+    }
+
+    .contact__ways {
+      grid-template-columns: 1fr;
+    }
+
+  }
+</style>

@@ -1,0 +1,259 @@
+---
+import { Image } from 'astro:assets';
+import { apps } from '../data/apps';
+import Icon from './Icon.astro';
+import Split from './Split.astro';
+
+const files = import.meta.glob<{ default: ImageMetadata }>('../assets/apps/*.{png,jpg,jpeg,webp,avif}', {
+  eager: true,
+});
+const asset = (name?: string) => (name ? files[`../assets/apps/${name}`]?.default : undefined);
+---
+
+{
+  apps.length > 0 && (
+    <section class="apps section defer" id="apps" aria-labelledby="apps-title">
+      <div class="container">
+        <header class="shead">
+          <p class="eyebrow" data-reveal>
+            <span class="eyebrow__dot" />
+            Live on Google Play
+          </p>
+          <h2 class="h2" id="apps-title" data-split>
+            <Split text="Apps I designed, built ~and shipped~ *on my own.*" />
+          </h2>
+          <p class="lede" data-reveal style="--d:120ms">
+            Idea, design, code, release and support. These are mine from the first commit to the store listing.
+          </p>
+        </header>
+
+        <div class:list={['apps__grid', { 'apps__grid--single': apps.length === 1 }]}>
+          {apps.map((app, index) => {
+            const icon = asset(app.icon);
+            const shots = (app.screenshots ?? []).map(asset).filter((shot) => shot !== undefined).slice(0, 3);
+            return (
+              <article class="app card" data-spot data-reveal style={`--d:${index * 100}ms`}>
+                <div class="app__shots" aria-hidden={shots.length ? undefined : 'true'}>
+                  {shots.length > 0 ? (
+                    shots.map((shot, shotIndex) => (
+                      <div class="app__shot" style={`--n:${shotIndex}`}>
+                        <Image
+                          src={shot}
+                          alt={`${app.name} screenshot ${shotIndex + 1}`}
+                          widths={[240, 400]}
+                          sizes="200px"
+                          quality={80}
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <div class="app__shot app__shot--blank">
+                      <span>{app.name.slice(0, 1)}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div class="app__body">
+                  <header class="app__head">
+                    {icon ? (
+                      <Image class="app__icon" src={icon} alt="" width={56} height={56} quality={90} />
+                    ) : (
+                      <span class="app__icon app__icon--blank" aria-hidden="true">
+                        {app.name.slice(0, 1)}
+                      </span>
+                    )}
+                    <div>
+                      <h3 class="app__name">{app.name}</h3>
+                      <p class="app__category mono">{app.category}</p>
+                    </div>
+                  </header>
+                  <p class="app__tagline">{app.tagline}</p>
+                  <p class="app__description">{app.description}</p>
+                  {app.highlights && (
+                    <ul class="chips">
+                      {app.highlights.map((highlight) => (
+                        <li class="chip">{highlight}</li>
+                      ))}
+                    </ul>
+                  )}
+                  <a class="btn btn--primary app__cta" href={app.playUrl} target="_blank" rel="noopener" data-magnetic>
+                    <Icon name="play" solid />
+                    Get it on Google Play
+                    <span class="btn__icon" aria-hidden="true">
+                      <Icon name="arrow-up-right" />
+                      <Icon name="arrow-up-right" />
+                    </span>
+                  </a>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style is:global>
+  .apps__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(20px, 3vw, 32px);
+  }
+
+  .apps__grid--single {
+    grid-template-columns: 1fr;
+  }
+
+  .app {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .apps__grid--single .app {
+    flex-direction: row-reverse;
+    align-items: stretch;
+  }
+
+  .app__shots {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 14px;
+    max-height: 380px;
+    padding: 40px 24px 0;
+    background:
+      radial-gradient(60% 70% at 50% 100%, rgb(124 200 255 / 0.16), transparent 70%),
+      #070709;
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+
+  .apps__grid--single .app__shots {
+    flex: 1.1;
+    border-bottom: 0;
+    border-left: 1px solid var(--line);
+  }
+
+  .app__shot {
+    flex: 0 1 168px;
+    min-width: 0;
+    aspect-ratio: 9 / 19.5;
+    padding: 5px;
+    border-radius: 26px 26px 0 0;
+    background: linear-gradient(150deg, #3a3b44, #101014 40%, #23242b);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.14);
+    transform: translateY(calc(var(--n, 0) * 22px + 8px));
+    transition: transform 0.8s var(--ease-out);
+  }
+
+  .app:hover .app__shot {
+    transform: translateY(calc(var(--n, 0) * 10px));
+  }
+
+  .app__shot img {
+    width: 100%;
+    height: 100%;
+    border-radius: 21px 21px 0 0;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .app__shot--blank {
+    display: grid;
+    place-items: center;
+    background: linear-gradient(160deg, #1b1c22, #0b0b0e);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 4rem;
+    color: rgb(255 255 255 / 0.3);
+  }
+
+  .app__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: clamp(22px, 3.2vw, 40px);
+  }
+
+  .app__head {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .app__icon {
+    flex: none;
+    width: 56px;
+    height: 56px;
+    border-radius: 15px;
+    box-shadow: 0 0 0 1px var(--line-2);
+  }
+
+  .app__icon--blank {
+    display: grid;
+    place-items: center;
+    background: linear-gradient(160deg, rgb(124 200 255 / 0.3), rgb(124 200 255 / 0.05));
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.6rem;
+    color: var(--accent);
+  }
+
+  .app__name {
+    font-size: 1.35rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+  }
+
+  .app__category {
+    margin-top: 0.15rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .app__tagline {
+    font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.7rem);
+    font-weight: 300;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .app__description {
+    max-width: 56ch;
+    color: var(--text-2);
+    text-wrap: pretty;
+  }
+
+  .app__cta {
+    margin-top: auto;
+  }
+
+  .app__cta > .icon {
+    width: 15px;
+    height: 15px;
+    margin-right: -0.25rem;
+  }
+
+  @media (max-width: 900px) {
+    .apps__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .apps__grid--single .app {
+      flex-direction: column;
+    }
+
+    .apps__grid--single .app__shots {
+      border-left: 0;
+      border-bottom: 1px solid var(--line);
+    }
+  }
+</style>

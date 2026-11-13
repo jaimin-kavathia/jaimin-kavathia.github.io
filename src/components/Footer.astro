@@ -1,0 +1,93 @@
+---
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+---
+
+<footer class="footer defer">
+  <div class="container footer__row">
+    <p>© {new Date().getFullYear()} {site.name}</p>
+    <p class="footer__made">Designed and built in {site.location.split(',')[0]}</p>
+    <a class="footer__top" href="#top">
+      Back to top
+      <span aria-hidden="true"><Icon name="arrow-up" /></span>
+    </a>
+  </div>
+  <p class="footer__wordmark" aria-hidden="true">{site.name}</p>
+</footer>
+
+<style is:global>
+  .footer {
+    padding-top: clamp(28px, 4vw, 44px);
+    overflow: hidden;
+  }
+
+  .footer__row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .footer__top {
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: var(--text);
+  }
+
+  .footer__top span {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--line-2);
+    border-radius: 50%;
+    transition:
+      background-color 0.3s,
+      color 0.3s,
+      transform 0.5s var(--ease-out);
+  }
+
+  .footer__top .icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .footer__top:hover span {
+    background: var(--text);
+    color: #08080a;
+    transform: translateY(-3px);
+  }
+
+  .footer__wordmark {
+    margin-top: clamp(20px, 3vw, 40px);
+    margin-bottom: -0.17em;
+    font-size: clamp(2.6rem, 12.6vw, 15rem);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.055em;
+    text-align: center;
+    white-space: nowrap;
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.26), rgb(255 255 255 / 0.02) 82%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    user-select: none;
+  }
+
+  @media (max-width: 680px) {
+    .footer__row {
+      grid-template-columns: 1fr auto;
+    }
+
+    .footer__made {
+      display: none;
+    }
+  }
+</style>

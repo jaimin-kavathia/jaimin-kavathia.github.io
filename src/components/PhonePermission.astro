@@ -1,0 +1,331 @@
+---
+/** Animated mock of the smart_permission flow: tap, dialog, allow, granted. */
+import Icon from './Icon.astro';
+---
+
+<div class="phone" aria-hidden="true">
+  <div class="phone__screen">
+    <span class="phone__island"></span>
+    <div class="ui">
+      <div class="ui__status mono">
+        <span>9:41</span>
+        <span class="ui__signal"><i></i><i></i><i></i></span>
+      </div>
+      <div class="ui__bar"><span class="ui__back"></span>Edit profile</div>
+
+      <div class="pm">
+        <div class="pm__avatar">
+          <span class="pm__initial">J</span>
+          <span class="pm__photo"></span>
+          <span class="pm__badge"><Icon name="camera" /></span>
+        </div>
+        <span class="ui__line" style="width:52%"></span>
+        <span class="ui__line ui__line--dim" style="width:34%"></span>
+        <span class="ui__field"></span>
+        <span class="ui__field"></span>
+        <div class="ui__btn">Take photo<span class="tap pm__tap1"></span></div>
+        <div class="pm__toast"><Icon name="check" />Camera access granted</div>
+      </div>
+
+      <div class="ui__scrim pm__scrim"></div>
+      <div class="pm__dialog">
+        <span class="pm__dialog-icon"><Icon name="camera" /></span>
+        <strong>Allow camera access?</strong>
+        <span class="pm__dialog-text">It is used to take your profile photo.</span>
+        <div class="pm__actions">
+          <span>Not now</span>
+          <span class="pm__allow">Allow<span class="tap pm__tap2"></span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .pm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 22px 16px 0;
+  }
+
+  .pm__avatar {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 84px;
+    height: 84px;
+    margin-bottom: 6px;
+    border-radius: 50%;
+    background: #23242c;
+    font-size: 30px;
+    font-weight: 300;
+    color: #8d8f9c;
+  }
+
+  .pm__photo {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 38%, #ffd9bd 0 21%, transparent 22%),
+      radial-gradient(ellipse at 50% 100%, #2c4a6e 0 44%, transparent 45%),
+      linear-gradient(160deg, #8fd0ff, #5a7bd6);
+    opacity: 0;
+  }
+
+  .pm__badge {
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border: 3px solid #0f1014;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .pm__badge .icon {
+    width: 13px;
+    height: 13px;
+    stroke-width: 2;
+  }
+
+  .pm .ui__field:first-of-type {
+    margin-top: 10px;
+  }
+
+  .pm .ui__btn {
+    margin-top: 8px;
+  }
+
+  .pm__toast {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    padding: 6px 10px 6px 8px;
+    border-radius: 999px;
+    background: rgb(127 227 176 / 0.14);
+    color: var(--ok);
+    font-size: 10px;
+    font-weight: 500;
+    opacity: 0;
+  }
+
+  .pm__toast .icon {
+    width: 12px;
+    height: 12px;
+    stroke-width: 2.4;
+  }
+
+  .pm__scrim {
+    opacity: 0;
+  }
+
+  .pm__dialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    width: 188px;
+    padding: 18px 14px 12px;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 22px;
+    background: #1d1e25;
+    box-shadow: 0 24px 48px rgb(0 0 0 / 0.5);
+    text-align: center;
+    translate: -50% -50%;
+    opacity: 0;
+  }
+
+  .pm__dialog strong {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .pm__dialog-icon {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    margin-bottom: 2px;
+    border-radius: 12px;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .pm__dialog-icon .icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .pm__dialog-text {
+    font-size: 10px;
+    line-height: 1.4;
+    color: #a3a5b2;
+  }
+
+  .pm__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .pm__actions > span {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: 30px;
+    border-radius: 10px;
+    background: rgb(255 255 255 / 0.07);
+    font-size: 10.5px;
+    font-weight: 500;
+  }
+
+  .pm__actions .pm__allow {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .pm__tap1 {
+      animation: pm-tap1 9s linear infinite;
+    }
+    .pm__tap2 {
+      animation: pm-tap2 9s linear infinite;
+    }
+    .pm__scrim {
+      animation: pm-scrim 9s var(--ease-in-out) infinite;
+    }
+    .pm__dialog {
+      animation: pm-dialog 9s var(--ease-out) infinite;
+    }
+    .pm__toast {
+      animation: pm-toast 9s var(--ease-out) infinite;
+    }
+    .pm__photo {
+      animation: pm-photo 9s var(--ease-out) infinite;
+    }
+  }
+
+  /* With motion off, show the moment that explains the package. */
+  @media (prefers-reduced-motion: reduce) {
+    .pm__scrim,
+    .pm__dialog {
+      opacity: 1;
+    }
+  }
+
+  @keyframes pm-tap1 {
+    0%,
+    7% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    10% {
+      opacity: 0.9;
+      transform: scale(1);
+    }
+    15%,
+    100% {
+      opacity: 0;
+      transform: scale(1.7);
+    }
+  }
+
+  @keyframes pm-tap2 {
+    0%,
+    35% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    38% {
+      opacity: 0.9;
+      transform: scale(1);
+    }
+    43%,
+    100% {
+      opacity: 0;
+      transform: scale(1.7);
+    }
+  }
+
+  @keyframes pm-scrim {
+    0%,
+    14% {
+      opacity: 0;
+    }
+    19%,
+    44% {
+      opacity: 1;
+    }
+    49%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes pm-dialog {
+    0%,
+    14% {
+      opacity: 0;
+      transform: translateY(20px) scale(0.92);
+    }
+    21%,
+    43% {
+      opacity: 1;
+      transform: none;
+    }
+    48%,
+    100% {
+      opacity: 0;
+      transform: translateY(8px) scale(0.97);
+    }
+  }
+
+  @keyframes pm-toast {
+    0%,
+    50% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    56%,
+    90% {
+      opacity: 1;
+      transform: none;
+    }
+    95%,
+    100% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+
+  @keyframes pm-photo {
+    0%,
+    50% {
+      opacity: 0;
+      transform: scale(0.7);
+    }
+    58%,
+    91% {
+      opacity: 1;
+      transform: none;
+    }
+    96%,
+    100% {
+      opacity: 0;
+      transform: none;
+    }
+  }
+</style>

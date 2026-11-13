@@ -1,0 +1,723 @@
+---
+import { compactNumber, getPackages } from '../data/packages';
+import Icon from './Icon.astro';
+import Split from './Split.astro';
+import PhonePermission from './PhonePermission.astro';
+import PhonePicker from './PhonePicker.astro';
+
+const packages = await getPackages();
+
+/** Minimal Dart colouring for the two short snippets. */
+function highlight(code: string): string {
+  const escaped = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return escaped.replace(
+    /\b(final|await|const|var)\b|\b([A-Z][A-Za-z]+)\b|\b([a-z][A-Za-z]*)(?=:)|\.([a-z][A-Za-z]*)(?=\()/g,
+    (match, keyword, type, property, method) => {
+      if (keyword) return `<span class="tk-k">${keyword}</span>`;
+      if (type) return `<span class="tk-t">${type}</span>`;
+      if (property) return `<span class="tk-p">${property}</span>`;
+      if (method) return `.<span class="tk-f">${method}</span>`;
+      return match;
+    },
+  );
+}
+---
+
+<section class="packages section defer" id="packages" aria-labelledby="packages-title">
+  <div class="container">
+    <header class="shead">
+      <p class="eyebrow" data-reveal><span class="eyebrow__dot"></span>Open source on pub.dev</p>
+      <h2 class="h2" id="packages-title" data-split>
+        <Split text="Two packages, built for ~the problems every~ *Flutter app* ~runs into.~" />
+      </h2>
+      <p class="lede" data-reveal style="--d:120ms">
+        Permissions and media picking are in almost every app, and almost always painful. I packaged the way I
+        solve them, so nobody has to write that code twice.
+      </p>
+    </header>
+
+    <div class="pkgs">
+      {
+        packages.map((pkg, index) => (
+          <article class:list={['pkg card', { 'pkg--flip': index % 2 === 1 }]} data-spot data-reveal>
+            <div class="pkg__info">
+              <header class="pkg__head">
+                <span class="pkg__glyph" aria-hidden="true">
+                  <Icon name="box" />
+                </span>
+                <div>
+                  <p class="pkg__name mono">{pkg.name}</p>
+                  <p class="pkg__meta mono">
+                    v{pkg.version}
+                    <span aria-hidden="true">/</span> MIT
+                    <span aria-hidden="true">/</span> Dart 3
+                  </p>
+                </div>
+              </header>
+
+              <h3 class="h3 pkg__title">
+                <Split text={pkg.headline} />
+              </h3>
+              <p class="pkg__summary">{pkg.summary}</p>
+
+              <ul class="pkg__features">
+                {pkg.features.map((feature) => (
+                  <li>
+                    <Icon name="check" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div class="install">
+                <code class="mono">
+                  <span class="install__prompt" aria-hidden="true">
+                    $
+                  </span>
+                  {pkg.install}
+                </code>
+                <button type="button" class="install__copy" data-copy={pkg.install}>
+                  <span class="sr-only">Copy install command for {pkg.name}</span>
+                  <Icon name="copy" class="install__icon-copy" />
+                  <Icon name="check" class="install__icon-done" />
+                </button>
+              </div>
+
+              <dl class="pkg__stats">
+                <div>
+                  <dt class="mono">
+                    <Icon name="heart" />
+                    Likes
+                  </dt>
+                  <dd>{pkg.likes}</dd>
+                </div>
+                <div>
+                  <dt class="mono">
+                    <Icon name="star" />
+                    Pub points
+                  </dt>
+                  <dd>
+                    {pkg.points}
+                    <small>/ {pkg.maxPoints}</small>
+                  </dd>
+                </div>
+                <div>
+                  <dt class="mono">
+                    <Icon name="download" />
+                    Downloads
+                  </dt>
+                  <dd>
+                    {compactNumber(pkg.downloads)}
+                    <small>/ 30 days</small>
+                  </dd>
+                </div>
+              </dl>
+
+              <ul class="chips" aria-label="Supported platforms">
+                {pkg.platforms.map((platform) => <li class="chip">{platform}</li>)}
+              </ul>
+
+              <div class="pkg__links">
+                <a class="btn btn--primary" href={pkg.pubUrl} target="_blank" rel="noopener" data-magnetic>
+                  View on pub.dev
+                  <span class="btn__icon" aria-hidden="true">
+                    <Icon name="arrow-up-right" />
+                    <Icon name="arrow-up-right" />
+                  </span>
+                </a>
+                <a class="link" href={pkg.repoUrl} target="_blank" rel="noopener">
+                  Source code
+                  <Icon name="arrow-up-right" />
+                </a>
+                <a class="link" href={pkg.blogUrl} target="_blank" rel="noopener">
+                  Read the story
+                  <Icon name="arrow-up-right" />
+                </a>
+              </div>
+            </div>
+
+            <div class="pkg__demo" data-play data-tilt>
+              <span class="pkg__dots" aria-hidden="true" />
+              <span class="pkg__halo" aria-hidden="true" />
+              <div class="pkg__phone">{pkg.demo === 'permission' ? <PhonePermission /> : <PhonePicker />}</div>
+              <figure class="snippet">
+                <figcaption class="mono">
+                  <span class="snippet__dots" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                  main.dart
+                </figcaption>
+                <pre class="mono"><code set:html={highlight(pkg.snippet)} /></pre>
+              </figure>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .pkgs {
+    display: grid;
+    gap: clamp(20px, 3vw, 32px);
+  }
+
+  .pkg {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  }
+
+  .pkg--flip .pkg__info {
+    order: 2;
+  }
+
+  .pkg__info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    gap: 1.35rem;
+    padding: clamp(24px, 4vw, 56px);
+  }
+
+  .pkg__head {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .pkg__glyph {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border: 1px solid var(--line-2);
+    border-radius: 14px;
+    background: linear-gradient(160deg, rgb(124 200 255 / 0.22), rgb(124 200 255 / 0.04));
+    color: var(--accent);
+  }
+
+  .pkg__glyph .icon {
+    width: 22px;
+    height: 22px;
+    stroke-width: 1.5;
+  }
+
+  .pkg__name {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .pkg__meta {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.1rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--text-2);
+  }
+
+  .pkg__meta span {
+    color: var(--text-3);
+    opacity: 0.6;
+  }
+
+  .pkg__title {
+    margin-top: 0.4rem;
+  }
+
+  .pkg__summary {
+    max-width: 54ch;
+    color: var(--text-2);
+    text-wrap: pretty;
+  }
+
+  .pkg__features {
+    display: grid;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+  }
+
+  .pkg__features li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
+    align-items: start;
+  }
+
+  .pkg__features .icon {
+    width: 18px;
+    height: 18px;
+    margin-top: 0.2em;
+    padding: 3px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    stroke-width: 2.6;
+  }
+
+  .install {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 440px;
+    padding: 6px 6px 6px 1rem;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: rgb(0 0 0 / 0.4);
+  }
+
+  .install code {
+    min-width: 0;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+
+  .install__prompt {
+    margin-right: 0.6rem;
+    color: var(--accent);
+    user-select: none;
+  }
+
+  .install__copy {
+    position: relative;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgb(255 255 255 / 0.06);
+    color: var(--text-2);
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+  }
+
+  .install__copy:hover {
+    background: rgb(255 255 255 / 0.12);
+    color: var(--text);
+  }
+
+  .install__copy .icon {
+    grid-area: 1 / 1;
+    width: 16px;
+    height: 16px;
+    transition:
+      opacity 0.3s,
+      transform 0.4s var(--ease-out);
+  }
+
+  .install__icon-done {
+    color: var(--ok);
+    opacity: 0;
+    transform: scale(0.4);
+    stroke-width: 2.4;
+  }
+
+  .install__copy[data-copied] .install__icon-copy {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  .install__copy[data-copied] .install__icon-done {
+    opacity: 1;
+    transform: none;
+  }
+
+  .pkg__stats {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
+    gap: clamp(1.25rem, 3vw, 2.75rem);
+    width: 100%;
+    padding-block: 1.1rem;
+    border-block: 1px solid var(--line);
+  }
+
+  .pkg__stats > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .pkg__stats dt {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  .pkg__stats dt .icon {
+    width: 12px;
+    height: 12px;
+    color: var(--text-3);
+  }
+
+  .pkg__stats dd {
+    font-size: 1.6rem;
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .pkg__stats small {
+    margin-left: 0.25rem;
+    font-size: 0.78rem;
+    letter-spacing: 0;
+    color: var(--text-3);
+  }
+
+  .pkg__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.9rem 1.6rem;
+    margin-top: 0.4rem;
+  }
+
+  /* ---------- Demo side ---------- */
+  .pkg__demo {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    place-items: center;
+    min-height: 640px;
+    padding: 48px 20px 120px;
+    border-left: 1px solid var(--line);
+    background: #070709;
+    overflow: hidden;
+    perspective: 1400px;
+  }
+
+  .pkg--flip .pkg__demo {
+    border-right: 1px solid var(--line);
+    border-left: 0;
+  }
+
+  .pkg__demo:not(.is-playing) * {
+    animation-play-state: paused !important;
+  }
+
+  .pkg__dots {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-image: radial-gradient(rgb(255 255 255 / 0.16) 1px, transparent 1px);
+    background-size: 22px 22px;
+    -webkit-mask-image: radial-gradient(62% 58% at 50% 46%, #000, transparent);
+    mask-image: radial-gradient(62% 58% at 50% 46%, #000, transparent);
+  }
+
+  .pkg__halo {
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    z-index: -1;
+    width: 440px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(124 200 255 / 0.22), transparent);
+    translate: -50% -50%;
+    animation: halo 7s var(--ease-in-out) infinite alternate;
+  }
+
+  @keyframes halo {
+    to {
+      transform: scale(1.18);
+      opacity: 0.7;
+    }
+  }
+
+  .pkg__phone {
+    --tilt-x: 5deg;
+    --tilt-y: -11deg;
+    transform-style: preserve-3d;
+    transform: rotateX(calc(var(--tilt-x) + var(--rx, 0deg))) rotateY(calc(var(--tilt-y) + var(--ry, 0deg)));
+    transition: transform 0.9s var(--ease-out);
+  }
+
+  .pkg--flip .pkg__phone {
+    --tilt-y: 11deg;
+  }
+
+  /* ---------- Phone and its little UI kit ---------- */
+  .phone {
+    position: relative;
+    width: 250px;
+    aspect-ratio: 250 / 520;
+    padding: 9px;
+    border-radius: 44px;
+    background: linear-gradient(150deg, #3a3b44, #101014 38%, #23242b);
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.14),
+      inset 0 0 0 1px rgb(0 0 0 / 0.6),
+      0 50px 90px -24px rgb(0 0 0 / 0.9),
+      0 0 140px -30px rgb(124 200 255 / 0.3);
+    animation: bob 7s var(--ease-in-out) infinite alternate;
+  }
+
+  @keyframes bob {
+    to {
+      transform: translateY(-12px);
+    }
+  }
+
+  .phone__screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 35px;
+    background: #0f1014;
+    color: #ececf1;
+    font-size: 11px;
+    line-height: 1.3;
+    overflow: hidden;
+  }
+
+  .phone__island {
+    position: absolute;
+    top: 9px;
+    left: 50%;
+    z-index: 5;
+    width: 66px;
+    height: 19px;
+    border-radius: 999px;
+    background: #000;
+    translate: -50% 0;
+  }
+
+  .ui {
+    position: absolute;
+    inset: 0;
+  }
+
+  .ui__status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 38px;
+    padding: 6px 22px 0;
+    font-size: 9.5px;
+    font-weight: 600;
+  }
+
+  .ui__signal {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 9px;
+  }
+
+  .ui__signal i {
+    width: 3px;
+    border-radius: 1px;
+    background: currentColor;
+  }
+
+  .ui__signal i:nth-child(1) {
+    height: 4px;
+  }
+  .ui__signal i:nth-child(2) {
+    height: 6.5px;
+  }
+  .ui__signal i:nth-child(3) {
+    height: 9px;
+  }
+
+  .ui__bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .ui__back {
+    width: 8px;
+    height: 8px;
+    margin-left: 3px;
+    border-bottom: 1.5px solid currentColor;
+    border-left: 1.5px solid currentColor;
+    rotate: 45deg;
+    opacity: 0.7;
+  }
+
+  .ui__line {
+    display: block;
+    height: 9px;
+    border-radius: 6px;
+    background: rgb(255 255 255 / 0.16);
+  }
+
+  .ui__line--dim {
+    height: 7px;
+    background: rgb(255 255 255 / 0.08);
+  }
+
+  .ui__field {
+    display: block;
+    width: 100%;
+    height: 34px;
+    border: 1px solid rgb(255 255 255 / 0.08);
+    border-radius: 11px;
+    background: rgb(255 255 255 / 0.03);
+  }
+
+  .ui__btn {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 38px;
+    border-radius: 12px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-size: 11.5px;
+    font-weight: 600;
+  }
+
+  .ui__scrim {
+    position: absolute;
+    inset: 0;
+    background: rgb(4 4 6 / 0.62);
+  }
+
+  /* Finger tap ripple */
+  .tap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    border: 1.5px solid rgb(255 255 255 / 0.9);
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.35);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ---------- Code snippet card ---------- */
+  .snippet {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    z-index: 2;
+    width: min(calc(100% - 40px), 400px);
+    border: 1px solid var(--line-2);
+    border-radius: 16px;
+    background: rgb(14 14 18 / 0.78);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 24px 60px -12px rgb(0 0 0 / 0.8);
+    translate: -50% 0;
+    overflow: hidden;
+  }
+
+  .snippet figcaption {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: var(--text-2);
+  }
+
+  .snippet__dots {
+    display: flex;
+    gap: 5px;
+  }
+
+  .snippet__dots i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.16);
+  }
+
+  .snippet pre {
+    padding: 0.85rem 1rem 1rem;
+    font-size: 0.76rem;
+    line-height: 1.65;
+    overflow-x: auto;
+    scrollbar-width: none;
+    tab-size: 2;
+  }
+
+  .tk-k {
+    color: #c9a7ff;
+  }
+  .tk-t {
+    color: var(--accent);
+  }
+  .tk-p {
+    color: #ffc9a8;
+  }
+  .tk-f {
+    color: #a6ecc9;
+  }
+
+  @media (max-width: 980px) {
+    .pkg {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .pkg--flip .pkg__info {
+      order: 0;
+    }
+
+    .pkg__demo,
+    .pkg--flip .pkg__demo {
+      min-height: 620px;
+      border: 0;
+      border-top: 1px solid var(--line);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .pkg__stats {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .pkg__stats dd {
+      font-size: 1.3rem;
+    }
+
+    .pkg__stats dt {
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+    }
+
+    .pkg__stats dt .icon {
+      display: none;
+    }
+
+    .pkg__stats small {
+      display: block;
+      margin: 0.2rem 0 0;
+    }
+
+    .snippet pre {
+      font-size: 0.7rem;
+    }
+  }
+</style>

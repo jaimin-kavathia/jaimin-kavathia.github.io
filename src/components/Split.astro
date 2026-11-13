@@ -1,0 +1,31 @@
+---
+/**
+ * Splits a line into word spans so it can animate in word by word.
+ * Markup inside the string:  *accent words*  and  ~dimmed words~
+ * Keep punctuation inside the markers ("*one line.*").
+ */
+interface Props {
+  text: string;
+  /** Offset for the stagger index, to chain two lines. */
+  start?: number;
+}
+
+const { text, start = 0 } = Astro.props;
+
+const tokens: { word: string; tone: string }[] = [];
+for (const part of text.split(/(\*[^*]+\*|~[^~]+~)/g)) {
+  if (!part.trim()) continue;
+  const tone = part.startsWith('*') ? 'em' : part.startsWith('~') ? 'dim' : '';
+  const clean = tone ? part.slice(1, -1) : part;
+  for (const word of clean.split(/\s+/).filter(Boolean)) tokens.push({ word, tone });
+}
+---
+
+{
+  tokens.map((token, index) => (
+    <Fragment>
+      <span class:list={['w', token.tone]} style={`--i:${start + index}`}>{token.word}</span>
+      {index < tokens.length - 1 ? ' ' : ''}
+    </Fragment>
+  ))
+}

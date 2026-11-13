@@ -1,0 +1,75 @@
+---
+import { marquee } from '../data/site';
+---
+
+<div class="marquee" data-play>
+  <p class="sr-only">Technologies I work with: {marquee.join(', ')}.</p>
+  <div class="marquee__track" aria-hidden="true">
+    {
+      [0, 1].map(() => (
+        <ul class="marquee__group">
+          {marquee.map((item) => (
+            <li>
+              {item}
+              <svg class="marquee__star" viewBox="0 0 16 16">
+                <path d="M8 0c.5 4.6 3.4 7.5 8 8-4.6.5-7.5 3.4-8 8-.5-4.6-3.4-7.5-8-8 4.6-.5 7.5-3.4 8-8z" />
+              </svg>
+            </li>
+          ))}
+        </ul>
+      ))
+    }
+  </div>
+</div>
+
+<style is:global>
+  .marquee {
+    position: relative;
+    padding-block: clamp(28px, 4vw, 44px);
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    animation: marquee 48s linear infinite;
+    animation-play-state: paused;
+  }
+
+  .marquee.is-playing .marquee__track {
+    animation-play-state: running;
+  }
+
+  .marquee__group {
+    display: flex;
+    flex: none;
+    align-items: center;
+  }
+
+  .marquee__group li {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(1.25rem, 2.5vw, 2.25rem);
+    padding-left: clamp(1.25rem, 2.5vw, 2.25rem);
+    font-size: clamp(1.1rem, 0.9rem + 0.8vw, 1.6rem);
+    font-weight: 300;
+    letter-spacing: -0.025em;
+    color: var(--text-2);
+    white-space: nowrap;
+  }
+
+  .marquee__star {
+    width: 0.6em;
+    height: 0.6em;
+    fill: var(--text-3);
+    opacity: 0.6;
+  }
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+</style>
