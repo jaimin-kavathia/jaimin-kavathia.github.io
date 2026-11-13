@@ -3,7 +3,9 @@ import { journey } from '../data/journey';
 import { site, yearsOfExperience } from '../data/site';
 import Split from './Split.astro';
 
-const kinds = { career: 'Career', award: 'Award', release: 'Release', learning: 'Learning' } as const;
+import Icon from './Icon.astro';
+
+const kinds = { career: 'Career', education: 'Education', release: 'Release', learning: 'Certificate' } as const;
 ---
 
 <section class="journey section defer" id="journey" aria-labelledby="journey-title">
@@ -14,8 +16,8 @@ const kinds = { career: 'Career', award: 'Award', release: 'Release', learning: 
         <Split text={`${yearsOfExperience} years in, ~and still~ *shipping.*`} />
       </h2>
       <p class="lede" data-reveal style="--d:120ms">
-        From a first Flutter project in {site.careerStartYear} to senior developer, package author and independent
-        app publisher.
+        From a first Flutter role in {site.careerStartYear} to five teams, two open-source packages and three apps
+        of my own.
       </p>
     </header>
 
@@ -28,9 +30,18 @@ const kinds = { career: 'Career', award: 'Award', release: 'Release', learning: 
             <span class="milestone__dot" aria-hidden="true" />
             <p class="milestone__when mono">{item.when}</p>
             <div class="milestone__body">
-              <p class="milestone__kind mono">{kinds[item.kind]}</p>
+              <p class="milestone__kind mono">
+                {kinds[item.kind]}
+                {item.place && <span class="milestone__place">{item.place}</span>}
+              </p>
               <h3 class="milestone__title">{item.title}</h3>
               <p class="milestone__text">{item.body}</p>
+              {item.award && (
+                <p class="milestone__award mono">
+                  <Icon name="star" solid />
+                  {item.award}
+                </p>
+              )}
             </div>
           </li>
         ))
@@ -140,8 +151,12 @@ const kinds = { career: 'Career', award: 'Award', release: 'Release', learning: 
   }
 
   .milestone__kind {
-    justify-self: start;
-    font-size: 0.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.2rem 0.6rem;
+    font-size: 0.62rem;
+    line-height: 1.5;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-3);
@@ -151,8 +166,40 @@ const kinds = { career: 'Career', award: 'Award', release: 'Release', learning: 
     color: var(--accent);
   }
 
-  .milestone--award .milestone__kind {
+  .milestone__place {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--text-2);
+  }
+
+  .milestone__place::before {
+    content: '';
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--text-3);
+  }
+
+  .milestone__award {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+    gap: 0.45rem;
+    margin-top: 0.35rem;
+    padding: 0.32rem 0.7rem 0.32rem 0.55rem;
+    border: 1px solid rgb(255 179 138 / 0.28);
+    border-radius: 999px;
+    background: rgb(255 179 138 / 0.07);
+    font-size: 0.64rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--warm);
+  }
+
+  .milestone__award .icon {
+    width: 11px;
+    height: 11px;
   }
 
   .milestone__title {

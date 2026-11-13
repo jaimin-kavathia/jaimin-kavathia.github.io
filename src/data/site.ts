@@ -3,6 +3,8 @@
  * Edit the values here; no component needs to change.
  */
 
+import { apps } from './apps';
+
 const CAREER_START = new Date('2021-09-01');
 
 /** Whole years of professional experience, computed at build time. */
@@ -25,14 +27,14 @@ export const site = {
   phoneHref: '+919426690867',
 
   title: 'Jaimin Kavathia — Senior Flutter Developer',
-  description: `Senior Flutter Developer with ${yearsOfExperience}+ years building cross-platform apps for Android, iOS, web and desktop. Author of the smart_permission and adaptive_media_picker packages on pub.dev.`,
+  description: `Senior Flutter Developer with ${yearsOfExperience}+ years building cross-platform apps for Android, iOS, web and desktop. Author of the smart_permission and adaptive_media_picker packages on pub.dev, and publisher of PDF Tools, SpotBuddy and Arrow Escape on Google Play.`,
 } as const;
 
 export const stats = [
   { value: yearsOfExperience, suffix: '+', label: 'Years with Flutter' },
-  { value: 25, suffix: '+', label: 'Projects delivered' },
+  { value: 30, suffix: '+', label: 'Projects delivered' },
   { value: 2, suffix: '', label: 'Packages on pub.dev' },
-  { value: 5, suffix: '', label: 'Platforms shipped' },
+  { value: apps.length, suffix: '', label: 'Apps on Google Play' },
 ] as const;
 
 /** Tech names that scroll past under the hero. */

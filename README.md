@@ -31,31 +31,35 @@ Years of experience are calculated from the September 2021 start date at build t
 
 Likes, pub points, downloads, version and platforms on the package cards are fetched from pub.dev during the build. If pub.dev cannot be reached, the saved numbers in `packages.ts` are used. The deploy workflow rebuilds every Monday so they stay current.
 
-### Add your photo
+### Change the photo
 
-Save a portrait as `src/assets/portrait.jpg` (`.png` and `.webp` also work). It replaces the monogram card in the About section automatically and is resized and converted to WebP at build time.
+The About portrait is `src/assets/portrait.webp`. Replace that file (`.jpg` and `.png` also work) and it is resized and converted at build time. Without a portrait file, a monogram card is shown instead.
 
 Best results: 4:5 portrait, at least 1200 × 1500 px, face in the upper half, dark or neutral background.
 
-### Add your Play Store apps
+### Add or edit a Play Store app
 
-1. Put the app icon and up to three portrait screenshots in `src/assets/apps/`.
-2. Add an entry to the `apps` array in `src/data/apps.ts`:
+1. Put the app icon in `src/assets/apps/` (512 × 512 px is ideal). Portrait screenshots are optional.
+2. Add an entry to the `apps` array in `src/data/apps.ts`, newest first:
 
 ```ts
 {
   name: 'App name',
+  subtitle: 'Second half of the store title',
+  category: 'Productivity',
   tagline: 'One line about what it does.',
   description: 'Two or three sentences.',
-  category: 'Productivity',
+  highlights: ['Works offline', 'Material 3'],
   playUrl: 'https://play.google.com/store/apps/details?id=your.package.id',
+  released: 'Nov 2026',
+  tint: '#6a5cff',                          // brand colour for the glow
   icon: 'app-icon.png',
-  screenshots: ['app-1.png', 'app-2.png'],
-  highlights: ['Offline first', 'Material 3'],
+  screenshots: ['app-1.png', 'app-2.png'],  // optional: shown in phone frames instead of the icon
+  rating: '5.0',                            // optional: update by hand
 }
 ```
 
-The Apps section and its navigation link appear as soon as the list has one entry.
+The Apps section, its navigation link and the "Apps on Google Play" stat all follow this list.
 
 ## Structure
 
