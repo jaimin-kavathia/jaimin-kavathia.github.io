@@ -1,19 +1,35 @@
 ---
 import { site } from '../data/site';
 import { apps } from '../data/apps';
+import { hirePath } from '../data/hire';
 import Icon from './Icon.astro';
 
+interface Props {
+  /** True on the home page, where section links scroll instead of navigating. */
+  home?: boolean;
+}
+
+const { home = false } = Astro.props;
+const onHirePage = Astro.url.pathname.startsWith(hirePath);
+
+// On the home page these are in-page anchors; elsewhere they lead back to it.
+const base = home ? '' : '/';
 const links = [
-  { href: '#about', label: 'About' },
-  { href: '#packages', label: 'Packages' },
-  ...(apps.length ? [{ href: '#apps', label: 'Apps' }] : []),
-  { href: '#expertise', label: 'Expertise' },
-  { href: '#journey', label: 'Journey' },
+  { href: `${base}#about`, label: 'About' },
+  { href: `${base}#packages`, label: 'Packages' },
+  ...(apps.length ? [{ href: `${base}#apps`, label: 'Apps' }] : []),
+  { href: `${base}#expertise`, label: 'Expertise' },
+  { href: `${base}#journey`, label: 'Journey' },
 ];
+const cta = onHirePage ? { href: '#contact', label: "Let's talk" } : { href: hirePath, label: 'Hire me' };
 ---
 
 <header class="nav" data-nav>
-  <a class="nav__brand pill" href="#top" aria-label={`${site.name}, back to top`}>
+  <a
+    class="nav__brand pill"
+    href={home ? '#top' : '/'}
+    aria-label={home ? `${site.name}, back to top` : `${site.name}, home page`}
+  >
     <span class="nav__mark" aria-hidden="true">{site.initials}</span>
     <span class="nav__name">{site.name}</span>
   </a>
@@ -23,9 +39,9 @@ const links = [
     {links.map((link) => <a href={link.href}>{link.label}</a>)}
   </nav>
 
-  <a class="nav__cta pill" href="#contact">
+  <a class="nav__cta pill" href={cta.href}>
     <span class="pulse" aria-hidden="true"></span>
-    Let's talk
+    {cta.label}
   </a>
 
   <button
@@ -43,7 +59,7 @@ const links = [
 <div class="menu" id="menu" data-menu inert>
   <nav class="menu__links" aria-label="Sections">
     {
-      [...links, { href: '#contact', label: 'Contact' }].map((link, index) => (
+      [...links, { href: hirePath, label: 'Hire me' }, { href: '#contact', label: 'Contact' }].map((link, index) => (
         <a href={link.href} style={`--i:${index}`}>
           <span class="menu__index mono">0{index + 1}</span>
           {link.label}

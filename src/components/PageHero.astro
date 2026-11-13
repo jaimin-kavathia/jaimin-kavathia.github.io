@@ -1,0 +1,53 @@
+---
+/** Header block for the inner pages: breadcrumbs, heading, intro and actions. */
+import type { Crumb } from '../lib/schema';
+import Split from './Split.astro';
+
+interface Props {
+  crumbs: Crumb[];
+  eyebrow: string;
+  /** Heading text. *accent words* and ~dimmed words~ are supported. */
+  title: string;
+  intro: string[];
+  /** Brand colour for the glow. */
+  tint?: string;
+}
+
+const { crumbs, eyebrow, title, intro, tint } = Astro.props;
+---
+
+<header class="phero" style={tint ? `--tint:${tint}` : undefined}>
+  <div class="phero__glow" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="container phero__inner">
+    <nav class="crumbs mono" aria-label="Breadcrumb">
+      <ol>
+        {
+          crumbs.map((crumb, index) => (
+            <li>
+              {index < crumbs.length - 1 ? (
+                <a href={crumb.path}>{crumb.name}</a>
+              ) : (
+                <span aria-current="page">{crumb.name}</span>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    <div class="phero__grid">
+      <div class="phero__text">
+        <p class="eyebrow"><span class="eyebrow__dot"></span>{eyebrow}</p>
+        <h1 class="phero__title"><Split text={title} /></h1>
+        {intro.map((paragraph) => <p class="lede">{paragraph}</p>)}
+        <div class="phero__actions">
+          <slot name="actions" />
+        </div>
+      </div>
+      <div class="phero__aside">
+        <slot name="aside" />
+      </div>
+    </div>
+  </div>
+</header>

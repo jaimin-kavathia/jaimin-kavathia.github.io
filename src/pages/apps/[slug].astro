@@ -1,0 +1,195 @@
+---
+import { Image } from 'astro:assets';
+import '../../styles/page.css';
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import PageHero from '../../components/PageHero.astro';
+import Faq from '../../components/Faq.astro';
+import Contact from '../../components/Contact.astro';
+import Footer from '../../components/Footer.astro';
+import Icon from '../../components/Icon.astro';
+import { apps, developerUrl, type AppInfo } from '../../data/apps';
+import { hirePath } from '../../data/hire';
+import { site } from '../../data/site';
+import { breadcrumbNode, faqNode, personId, webPageNode, type Crumb } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return apps.map((app) => ({ params: { slug: app.detail.slug }, props: { app } }));
+}
+
+interface Props {
+  app: AppInfo;
+}
+
+const { app } = Astro.props;
+const { detail } = app;
+const path = `/apps/${detail.slug}/`;
+const origin = Astro.site!;
+const url = new URL(path, origin).href;
+const modified = new Date().toISOString().slice(0, 10);
+
+const files = import.meta.glob<{ default: ImageMetadata }>('../../assets/apps/*.{png,jpg,jpeg,webp,avif}', {
+  eager: true,
+});
+const asset = (name?: string) => (name ? files[`../../assets/apps/${name}`]?.default : undefined);
+const icon = asset(app.icon);
+const shots = (app.screenshots ?? []).map(asset).filter((shot) => shot !== undefined);
+const others = apps.filter((other) => other !== app);
+
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: 'Apps', path: '/#apps' },
+  { name: app.name, path },
+];
+
+const schema = [
+  webPageNode(origin, path, detail.seoTitle, detail.seoDescription, modified),
+  breadcrumbNode(origin, crumbs),
+  {
+    '@type': 'MobileApplication',
+    '@id': `${url}#app`,
+    name: `${app.name}: ${app.subtitle}`,
+    alternateName: app.name,
+    description: detail.seoDescription,
+    url,
+    operatingSystem: 'Android',
+    applicationCategory: detail.schemaCategory,
+    installUrl: app.playUrl,
+    downloadUrl: app.playUrl,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    author: { '@id': personId(origin) },
+    publisher: { '@id': personId(origin) },
+    sameAs: [app.playUrl],
+  },
+  faqNode(detail.faq),
+];
+---
+
+<Base title={detail.seoTitle} description={detail.seoDescription} schema={schema} type="article">
+  <Nav />
+  <main id="main">
+    <PageHero crumbs={crumbs} eyebrow={`${app.category} · Android`} title={detail.pageTitle} intro={detail.intro} tint={app.tint}>
+      <Fragment slot="actions">
+        <a class="btn btn--primary" href={app.playUrl} target="_blank" rel="noopener" data-magnetic>
+          <Icon name="play" solid />
+          Get {app.name} on Google Play
+          <span class="btn__icon" aria-hidden="true">
+            <Icon name="arrow-up-right" /><Icon name="arrow-up-right" />
+          </span>
+        </a>
+        {
+          icon && (
+            <div class="apphead">
+              <Image src={icon} alt={`${app.name} app icon`} width={64} height={64} densities={[1, 2, 3]} quality={90} />
+              <p>
+                {app.name}
+                <br />
+                {app.subtitle}
+              </p>
+            </div>
+          )
+        }
+      </Fragment>
+      {
+        shots.length > 0 && (
+          <div slot="aside" class="shots">
+            {shots.slice(0, 2).map((shot, index) => (
+              <div class="shots__item">
+                <Image
+                  src={shot}
+                  alt={`${app.name} for Android, screenshot ${index + 1}`}
+                  widths={[240, 480]}
+                  sizes="(max-width: 900px) 42vw, 220px"
+                  quality={84}
+                  loading="eager"
+                />
+              </div>
+            ))}
+          </div>
+        )
+      }
+    </PageHero>
+
+    <section class="psection" aria-label="App facts">
+      <div class="container">
+        <dl class="facts" data-reveal>
+          {
+            detail.facts.map((fact) => (
+              <div>
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </section>
+
+    <section class="psection" aria-labelledby="features-title">
+      <div class="container">
+        <header class="psection__head">
+          <p class="eyebrow" data-reveal><span class="eyebrow__dot"></span>Features</p>
+          <h2 class="h2" id="features-title">What {app.name} does</h2>
+          <p class="lede">{app.description}</p>
+        </header>
+        <div class="pgrid">
+          {
+            detail.groups.map((group, index) => (
+              <article class="pcard card" data-spot data-reveal style={`--d:${(index % 3) * 80}ms`}>
+                <h3>{group.title}</h3>
+                <ul>
+                  {group.items.map((item) => (
+                    <li>
+                      <Icon name="check" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <Faq title={`Questions about ${app.name}`} questions={detail.faq} />
+
+    <section class="psection" aria-labelledby="more-title">
+      <div class="container">
+        <header class="psection__head">
+          <h2 class="h2" id="more-title">More apps by {site.name}</h2>
+        </header>
+        <div class="more">
+          {
+            others.map((other) => (
+              <a class="card" href={`/apps/${other.detail.slug}/`}>
+                <span>
+                  <strong>{other.name}</strong>
+                  <span>{other.tagline}</span>
+                </span>
+                <Icon name="arrow-right" />
+              </a>
+            ))
+          }
+          <a class="card" href={developerUrl} target="_blank" rel="noopener">
+            <span>
+              <strong>All apps on Google Play</strong>
+              <span>The full developer page.</span>
+            </span>
+            <Icon name="arrow-up-right" />
+          </a>
+          <a class="card" href={hirePath}>
+            <span>
+              <strong>Want an app like this?</strong>
+              <span>Hire me as your Flutter developer.</span>
+            </span>
+            <Icon name="arrow-right" />
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <Contact />
+  </main>
+  <Footer />
+</Base>

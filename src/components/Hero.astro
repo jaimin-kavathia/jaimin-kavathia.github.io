@@ -25,18 +25,21 @@ import Split from './Split.astro';
     </a>
 
     <div class="hero__content" data-stage-content>
-      <p class="eyebrow hero__badge">
-        <span class="pulse" aria-hidden="true"></span>
-        {site.role}<span class="hero__since"> · since {site.careerStartYear}</span>
-      </p>
-
-      <h1 class="display hero__title" id="hero-title">
-        <Split text="Flutter apps that feel *native* ~on every screen.~" />
+      <!-- One heading: the name and role (what people search for), then the headline. -->
+      <h1 class="hero__h1" id="hero-title">
+        <span class="eyebrow hero__badge">
+          <span class="pulse" aria-hidden="true"></span>
+          <span>{site.name} · {site.role}<span class="hero__since">, {site.country}</span></span>
+        </span>
+        <span class="display hero__title">
+          <Split text="Flutter apps that feel *native* ~on every screen.~" />
+        </span>
       </h1>
 
       <p class="lede hero__lede">
-        I'm {site.name}. For {yearsOfExperience}+ years I've been building fast, dependable apps for Android,
-        iOS, web and desktop, and open-sourcing the pieces I wished already existed.
+        I'm {site.name}, a senior Flutter developer based in {site.city}, {site.country}. For {yearsOfExperience}+
+        years I've been building fast, dependable apps for Android, iOS, web and desktop, and open-sourcing the
+        pieces I wished already existed.
       </p>
 
       <div class="hero__cta">
@@ -156,6 +159,19 @@ import Split from './Split.astro';
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     animation: fade-up 1s var(--ease-out) both;
+  }
+
+  .hero__h1 {
+    display: grid;
+    justify-items: center;
+    gap: clamp(1.4rem, 2.6vw, 2rem);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  .hero__title {
+    display: block;
   }
 
   .hero__title .w {
@@ -298,6 +314,12 @@ import Split from './Split.astro';
 
     .hero__since {
       display: none;
+    }
+
+    .hero__badge {
+      font-size: 0.6rem;
+      letter-spacing: 0.05em;
+      text-align: center;
     }
   }
 </style>

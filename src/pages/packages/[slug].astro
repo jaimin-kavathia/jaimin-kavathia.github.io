@@ -1,0 +1,221 @@
+---
+import '../../styles/package.css';
+import '../../styles/page.css';
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import PageHero from '../../components/PageHero.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
+import Faq from '../../components/Faq.astro';
+import Contact from '../../components/Contact.astro';
+import Footer from '../../components/Footer.astro';
+import Icon from '../../components/Icon.astro';
+import PhonePermission from '../../components/PhonePermission.astro';
+import PhonePicker from '../../components/PhonePicker.astro';
+import { compactNumber, getPackages, type ResolvedPackage } from '../../data/packages';
+import { hirePath } from '../../data/hire';
+import { site } from '../../data/site';
+import { breadcrumbNode, faqNode, personId, webPageNode, type Crumb } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const packages = await getPackages();
+  return packages.map((pkg) => ({ params: { slug: pkg.detail.slug }, props: { pkg, others: packages.filter((p) => p !== pkg) } }));
+}
+
+interface Props {
+  pkg: ResolvedPackage;
+  others: ResolvedPackage[];
+}
+
+const { pkg, others } = Astro.props;
+const { detail } = pkg;
+const origin = Astro.site!;
+const url = new URL(pkg.path, origin).href;
+const modified = new Date().toISOString().slice(0, 10);
+
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: 'Packages', path: '/#packages' },
+  { name: pkg.name, path: pkg.path },
+];
+
+const facts = [
+  { label: 'Latest version', value: `v${pkg.version}` },
+  { label: 'Pub points', value: `${pkg.points} / ${pkg.maxPoints}` },
+  { label: 'Likes', value: String(pkg.likes) },
+  { label: 'Downloads, 30 days', value: compactNumber(pkg.downloads) },
+  { label: 'License', value: 'MIT' },
+  { label: 'Platforms', value: pkg.platforms.join(', ') },
+];
+
+const schema = [
+  webPageNode(origin, pkg.path, detail.seoTitle, detail.seoDescription, modified),
+  breadcrumbNode(origin, crumbs),
+  {
+    '@type': 'SoftwareSourceCode',
+    '@id': `${url}#package`,
+    name: pkg.name,
+    description: detail.seoDescription,
+    url,
+    codeRepository: pkg.repoUrl,
+    programmingLanguage: 'Dart',
+    runtimePlatform: 'Flutter',
+    version: pkg.version,
+    license: 'https://opensource.org/licenses/MIT',
+    author: { '@id': personId(origin) },
+    maintainer: { '@id': personId(origin) },
+    sameAs: [pkg.pubUrl, pkg.repoUrl],
+  },
+  faqNode(detail.faq),
+];
+---
+
+<Base title={detail.seoTitle} description={detail.seoDescription} schema={schema} type="article">
+  <Nav />
+  <main id="main">
+    <PageHero crumbs={crumbs} eyebrow="Open-source Flutter package" title={detail.pageTitle} intro={detail.intro}>
+      <Fragment slot="actions">
+        <a class="btn btn--primary" href={pkg.pubUrl} target="_blank" rel="noopener" data-magnetic>
+          View on pub.dev
+          <span class="btn__icon" aria-hidden="true">
+            <Icon name="arrow-up-right" /><Icon name="arrow-up-right" />
+          </span>
+        </a>
+        <a class="link" href={pkg.repoUrl} target="_blank" rel="noopener">Source on GitHub <Icon name="arrow-up-right" /></a>
+        <a class="link" href={pkg.blogUrl} target="_blank" rel="noopener">Read the story <Icon name="arrow-up-right" /></a>
+      </Fragment>
+      <div slot="aside" class="pkg__demo pkg__demo--page" data-play data-tilt>
+        <span class="pkg__dots" aria-hidden="true"></span>
+        <span class="pkg__halo" aria-hidden="true"></span>
+        <div class="pkg__phone">{pkg.demo === 'permission' ? <PhonePermission /> : <PhonePicker />}</div>
+      </div>
+    </PageHero>
+
+    <section class="psection" aria-label="Package facts">
+      <div class="container">
+        <dl class="facts" data-reveal>
+          {
+            facts.map((fact) => (
+              <div>
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </section>
+
+    <section class="psection" aria-labelledby="install-title">
+      <div class="container">
+        <header class="psection__head">
+          <p class="eyebrow" data-reveal><span class="eyebrow__dot"></span>Get started</p>
+          <h2 class="h2" id="install-title">Install {pkg.name}</h2>
+          <p class="lede">{detail.requirements}</p>
+        </header>
+        <div class="install install--page">
+          <code class="mono"><span class="install__prompt" aria-hidden="true">$</span>{pkg.install}</code>
+          <button type="button" class="install__copy" data-copy={pkg.install}>
+            <span class="sr-only">Copy install command</span>
+            <Icon name="copy" class="install__icon-copy" />
+            <Icon name="check" class="install__icon-done" />
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="psection" aria-labelledby="usage-title">
+      <div class="container">
+        <header class="psection__head">
+          <p class="eyebrow" data-reveal><span class="eyebrow__dot"></span>Usage</p>
+          <h2 class="h2" id="usage-title">How to use {pkg.name} in a Flutter app</h2>
+        </header>
+        <div class="guide">
+          {
+            detail.sections.map((section) => (
+              <article class="guide__item" data-reveal>
+                <div class="guide__text">
+                  <h3>{section.heading}</h3>
+                  <p>{section.body}</p>
+                </div>
+                {section.code && <CodeBlock code={section.code} />}
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="psection" aria-labelledby="table-title">
+      <div class="container">
+        <header class="psection__head">
+          <p class="eyebrow" data-reveal><span class="eyebrow__dot"></span>At a glance</p>
+          <h2 class="h2" id="table-title">{detail.table.caption}</h2>
+        </header>
+        <div class="ptable" data-reveal>
+          <table>
+            <thead>
+              <tr>{detail.table.head.map((cell) => <th scope="col">{cell}</th>)}</tr>
+            </thead>
+            <tbody>
+              {
+                detail.table.rows.map((row) => (
+                  <tr>
+                    {row.map((cell, index) => (index === 0 ? <th scope="row">{cell}</th> : <td>{cell}</td>))}
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <Faq title={`Questions about ${pkg.name}`} questions={detail.faq} />
+
+    <section class="psection" aria-labelledby="more-title">
+      <div class="container">
+        <header class="psection__head">
+          <h2 class="h2" id="more-title">More from {site.firstName}</h2>
+        </header>
+        <div class="more">
+          {
+            others.map((other) => (
+              <a class="card" href={other.path}>
+                <span>
+                  <strong class="mono">{other.name}</strong>
+                  <span>{other.summary.split('. ')[0]}.</span>
+                </span>
+                <Icon name="arrow-right" />
+              </a>
+            ))
+          }
+          <a class="card" href={hirePath}>
+            <span>
+              <strong>Hire a Flutter developer</strong>
+              <span>Need this kind of work in your own app? I take on freelance projects.</span>
+            </span>
+            <Icon name="arrow-right" />
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <Contact />
+  </main>
+  <Footer />
+</Base>
+
+<style is:global>
+  .pkg__demo.pkg__demo--page {
+    width: 100%;
+    min-height: 0;
+    padding: 28px 0 12px;
+    border: 0;
+    background: none;
+    overflow: visible;
+  }
+
+  .install--page {
+    max-width: 520px;
+  }
+</style>

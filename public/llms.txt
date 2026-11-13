@@ -1,0 +1,24 @@
+# Jaimin Kavathia
+
+> Jaimin Kavathia is a senior Flutter developer based in Ahmedabad, Gujarat, India. He has built cross-platform apps for Android, iOS, web and desktop since September 2021, maintains two open-source Flutter packages on pub.dev, and publishes his own apps on Google Play. He is available for freelance and contract Flutter work, in India and remotely.
+
+## Pages
+
+- [Home](https://jaimin-kavathia.github.io/): profile, expertise, career timeline and contact details
+- [Hire a freelance Flutter developer](https://jaimin-kavathia.github.io/hire-flutter-developer/): services, process and common questions
+
+## Open-source Flutter packages
+
+- [smart_permission](https://jaimin-kavathia.github.io/packages/smart-permission/): runtime permissions in one call, with the full denied, permanently denied and Open Settings flow. Built on permission_handler.
+- [adaptive_media_picker](https://jaimin-kavathia.github.io/packages/adaptive-media-picker/): image and video picker with permissions, a camera or gallery sheet, cropping and validation built in.
+
+## Android apps
+
+- [SpotBuddy](https://jaimin-kavathia.github.io/apps/spotbuddy/): find-my-parked-car app with one-tap save, compass and meter timer
+- [Arrow Escape](https://jaimin-kavathia.github.io/apps/arrow-escape/): tap-away arrow puzzle with 10,000 levels
+- [PDF Tools](https://jaimin-kavathia.github.io/apps/pdf-tools/): offline PDF editor, scanner and converter
+
+## Contact
+
+- Email: jaiminkavathia30@gmail.com
+- Phone: +91 94266 90867

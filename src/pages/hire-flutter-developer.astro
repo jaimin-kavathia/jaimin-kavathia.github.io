@@ -1,0 +1,169 @@
+---
+import '../styles/page.css';
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import PageHero from '../components/PageHero.astro';
+import Faq from '../components/Faq.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import { apps } from '../data/apps';
+import { checklist, hireFaq, hireIntro, hirePath, hireSeo, services, steps } from '../data/hire';
+import { site, yearsOfExperience } from '../data/site';
+import { breadcrumbNode, faqNode, personId, webPageNode, type Crumb } from '../lib/schema';
+
+const origin = Astro.site!;
+const modified = new Date().toISOString().slice(0, 10);
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: 'Hire a Flutter developer', path: hirePath },
+];
+
+const facts = [
+  { label: 'Experience', value: `${yearsOfExperience}+ years with Flutter` },
+  { label: 'Delivered', value: '30+ projects' },
+  { label: 'Open source', value: '2 packages on pub.dev' },
+  { label: 'Own apps', value: `${apps.length} on Google Play` },
+  { label: 'Based in', value: `${site.city}, ${site.country} (IST)` },
+  { label: 'Works with', value: 'Clients worldwide, remotely' },
+];
+
+const schema = [
+  webPageNode(origin, hirePath, hireSeo.title, hireSeo.description, modified),
+  breadcrumbNode(origin, crumbs),
+  {
+    '@type': 'Service',
+    '@id': `${new URL(hirePath, origin).href}#service`,
+    name: 'Freelance Flutter app development',
+    serviceType: 'Flutter app development',
+    description: hireSeo.description,
+    provider: { '@id': personId(origin) },
+    areaServed: [{ '@type': 'Country', name: 'India' }, 'Worldwide'],
+    url: new URL(hirePath, origin).href,
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Flutter development services',
+      itemListElement: services.map((service) => ({
+        '@type': 'Offer',
+        itemOffered: { '@type': 'Service', name: service.title, description: service.body },
+      })),
+    },
+  },
+  faqNode(hireFaq),
+];
+---
+
+<Base title={hireSeo.title} description={hireSeo.description} schema={schema}>
+  <Nav />
+  <main id="main">
+    <PageHero
+      crumbs={crumbs}
+      eyebrow="Available for freelance work"
+      title="Hire a *freelance Flutter developer* ~in India~"
+      intro={hireIntro}
+    >
+      <Fragment slot="actions">
+        <a class="btn btn--primary" href="#contact" data-magnetic>
+          Start a conversation
+          <span class="btn__icon" aria-hidden="true"><Icon name="arrow-right" /><Icon name="arrow-right" /></span>
+        </a>
+        <a class="link" href="#services">What I can build for you <Icon name="arrow-down" /></a>
+      </Fragment>
+    </PageHero>
+
+    <section class="psection" aria-label="At a glance">
+      <div class="container">
+        <dl class="facts" data-reveal>
+          {
+            facts.map((fact) => (
+              <div>
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </section>
+
+    <section class="psection" id="services" aria-labelledby="services-title">
+      <div class="container">
+        <header class="psection__head">
+          <p class="eyebrow" data-reveal><span class="eyebrow__dot"></span>Services</p>
+          <h2 class="h2" id="services-title">What you can hire a Flutter developer for</h2>
+          <p class="lede">
+            Whether you need a Flutter app developer for a whole product or a specialist for one difficult feature,
+            this is the work I take on.
+          </p>
+        </header>
+        <div class="pgrid">
+          {
+            services.map((service, index) => (
+              <article class="pcard card" data-spot data-reveal style={`--d:${(index % 3) * 80}ms`}>
+                <span class="pcard__icon" aria-hidden="true">
+                  <Icon name={service.icon} />
+                </span>
+                <h3>{service.title}</h3>
+                <p>{service.body}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="psection" aria-labelledby="process-title">
+      <div class="container">
+        <header class="psection__head">
+          <p class="eyebrow" data-reveal><span class="eyebrow__dot"></span>Process</p>
+          <h2 class="h2" id="process-title">How working with a freelance Flutter developer goes</h2>
+        </header>
+        <ol class="steps">
+          {
+            steps.map((step, index) => (
+              <li data-reveal style={`--d:${index * 90}ms`}>
+                <h3>{step.title}</h3>
+                <p>{step.body}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <section class="psection" aria-labelledby="choose-title">
+      <div class="container">
+        <header class="psection__head">
+          <p class="eyebrow" data-reveal><span class="eyebrow__dot"></span>Before you hire anyone</p>
+          <h2 class="h2" id="choose-title">How to choose the best Flutter developer for your app</h2>
+          <p class="lede">
+            "Best" depends on your project, so do not take anyone's word for it, mine included. Check these five
+            things with every Flutter developer you talk to. Here is how I measure up against each.
+          </p>
+        </header>
+        <div class="pgrid">
+          {
+            checklist.map((item, index) => (
+              <article class="pcard card" data-spot data-reveal style={`--d:${(index % 3) * 80}ms`}>
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
+                <p class="pcard__proof">{item.proof}</p>
+                {item.link && (
+                  <a class="link" href={item.link.href}>
+                    {item.link.label}
+                    <Icon name="arrow-right" />
+                  </a>
+                )}
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <Faq title="Questions about hiring a Flutter developer" questions={hireFaq} />
+
+    <Contact />
+  </main>
+  <Footer />
+</Base>

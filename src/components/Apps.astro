@@ -40,14 +40,20 @@ const asset = (name?: string) => (name ? files[`../assets/apps/${name}`]?.defaul
               .slice(0, 2);
             return (
               <article class="app card" data-spot data-reveal style={`--d:${index * 110}ms;--tint:${app.tint}`}>
-                <div class="app__media" aria-hidden="true">
-                  <span class="app__glow" />
-                  <span class="app__dots" />
+                <div class="app__media">
+                  <span class="app__glow" aria-hidden="true" />
+                  <span class="app__dots" aria-hidden="true" />
                   {shots.length > 0 ? (
                     <div class="app__shots">
                       {shots.map((shot, shotIndex) => (
                         <div class="app__shot" style={`--n:${shotIndex}`}>
-                          <Image src={shot} alt="" widths={[220, 440]} sizes="170px" quality={82} />
+                          <Image
+                            src={shot}
+                            alt={`${app.name} Android app, screenshot ${shotIndex + 1}`}
+                            widths={[220, 440]}
+                            sizes="170px"
+                            quality={82}
+                          />
                         </div>
                       ))}
                     </div>
@@ -55,7 +61,9 @@ const asset = (name?: string) => (name ? files[`../assets/apps/${name}`]?.defaul
                     <div class="app__badge">
                       <span class="app__ring" />
                       <span class="app__ring" />
-                      {icon && <Image class="app__badge-icon" src={icon} alt="" width={72} height={72} quality={95} />}
+                      {icon && (
+                        <Image class="app__badge-icon" src={icon} alt={`${app.name} app icon`} width={72} height={72} densities={[1, 2, 3]} quality={90} />
+                      )}
                     </div>
                   )}
                   <span class="app__tag app__tag--left mono">{app.category}</span>
@@ -65,7 +73,7 @@ const asset = (name?: string) => (name ? files[`../assets/apps/${name}`]?.defaul
                 <div class="app__body">
                   <header class="app__head">
                     {shots.length > 0 && icon && (
-                      <Image class="app__icon" src={icon} alt="" width={48} height={48} quality={95} />
+                      <Image class="app__icon" src={icon} alt={`${app.name} app icon`} width={48} height={48} densities={[1, 2, 3]} quality={90} />
                     )}
                     <div>
                       <h3 class="app__name">{app.name}</h3>
@@ -86,15 +94,21 @@ const asset = (name?: string) => (name ? files[`../assets/apps/${name}`]?.defaul
                       <li class="chip">{highlight}</li>
                     ))}
                   </ul>
-                  <a class="btn btn--primary app__cta" href={app.playUrl} target="_blank" rel="noopener" data-magnetic>
-                    <Icon name="play" solid />
-                    Get it on Google Play
-                    <span class="sr-only">: {app.name}</span>
-                    <span class="btn__icon" aria-hidden="true">
-                      <Icon name="arrow-up-right" />
-                      <Icon name="arrow-up-right" />
-                    </span>
-                  </a>
+                  <div class="app__actions">
+                    <a class="btn btn--primary app__cta" href={app.playUrl} target="_blank" rel="noopener" data-magnetic>
+                      <Icon name="play" solid />
+                      Get it on Google Play
+                      <span class="sr-only">: {app.name}</span>
+                      <span class="btn__icon" aria-hidden="true">
+                        <Icon name="arrow-up-right" />
+                        <Icon name="arrow-up-right" />
+                      </span>
+                    </a>
+                    <a class="link" href={`/apps/${app.detail.slug}/`}>
+                      About {app.name}
+                      <Icon name="arrow-right" />
+                    </a>
+                  </div>
                 </div>
               </article>
             );
@@ -330,9 +344,16 @@ const asset = (name?: string) => (name ? files[`../assets/apps/${name}`]?.defaul
     margin-bottom: 0.5rem;
   }
 
+  .app__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8rem 1.2rem;
+    margin-top: auto;
+  }
+
   .app__cta {
     --h: 48px;
-    margin-top: auto;
     font-size: 0.9rem;
   }
 

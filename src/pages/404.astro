@@ -4,7 +4,7 @@ import Icon from '../components/Icon.astro';
 import { site } from '../data/site';
 ---
 
-<Base title={`Page not found — ${site.name}`} description="This page does not exist.">
+<Base title={`Page not found — ${site.name}`} description="This page does not exist." noindex>
   <main id="main" class="lost">
     <p class="eyebrow"><span class="eyebrow__dot"></span>Error 404</p>
     <h1 class="display">This screen <span class="w em">isn't built yet.</span></h1>

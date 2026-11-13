@@ -21,9 +21,10 @@ All text and data live in `src/data/`. No component needs to change for a conten
 
 | File | What it holds |
 | --- | --- |
-| `site.ts` | Name, role, location, email, phone, headline stats, the tech marquee |
-| `packages.ts` | The two pub.dev packages: headline, summary, features, code snippet, links |
-| `apps.ts` | Your own apps on Google Play (see below) |
+| `site.ts` | Name, role, location, email, phone, search title and description, headline stats, the tech marquee |
+| `packages.ts` | The two pub.dev packages: card content, plus the content of each package page |
+| `apps.ts` | Your own apps on Google Play: card content, plus the content of each app page |
+| `hire.ts` | The hire page: services, process, checklist and questions |
 | `expertise.ts` | The expertise tiles and the toolbox list |
 | `journey.ts` | Timeline milestones |
 
@@ -60,6 +61,29 @@ Best results: 4:5 portrait, at least 1200 × 1500 px, face in the upper half, da
 ```
 
 The Apps section, its navigation link and the "Apps on Google Play" stat all follow this list.
+
+## Pages and search
+
+| URL | Targets searches for | Content lives in |
+| --- | --- | --- |
+| `/` | the name, "Flutter developer", "senior Flutter developer Ahmedabad / India" | `site.ts` and the section components |
+| `/hire-flutter-developer/` | "hire Flutter developer India", "freelance Flutter developer", "Flutter app developer for hire" | `hire.ts` |
+| `/packages/smart-permission/` | "Flutter runtime permissions package", "permission_handler" questions | `packages.ts` → `detail` |
+| `/packages/adaptive-media-picker/` | "Flutter image picker with crop", "Flutter media picker" | `packages.ts` → `detail` |
+| `/apps/spotbuddy/`, `/apps/arrow-escape/`, `/apps/pdf-tools/` | each app's name and category | `apps.ts` → `detail` |
+
+Each page sets its own title, description and canonical URL, and publishes schema.org structured data (built in `src/lib/schema.ts`): a `Person` and `WebSite` on every page, plus `ProfilePage`, `Service`, `SoftwareSourceCode`, `MobileApplication`, `BreadcrumbList` and `FAQPage` where they apply. `sitemap.xml` lists every page and is regenerated on each build.
+
+The hire page describes how you work with clients. Read `src/data/hire.ts` and change anything that is not how you actually take on work.
+
+### After deploying: tell search engines
+
+1. Open [Google Search Console](https://search.google.com/search-console), add the property `https://jaimin-kavathia.github.io/` and choose the **HTML tag** method.
+2. Copy the code from the tag's `content="..."` into `googleSiteVerification` in `src/data/site.ts`, then commit and push.
+3. Back in Search Console press **Verify**, then submit `sitemap.xml` under **Sitemaps**.
+4. Use **URL inspection → Request indexing** for the home page and the hire page.
+
+Bing Webmaster Tools works the same way through `bingSiteVerification`.
 
 ## Structure
 

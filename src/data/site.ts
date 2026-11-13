@@ -15,9 +15,13 @@ export const yearsOfExperience = Math.floor(
 export const site = {
   name: 'Jaimin Kavathia',
   firstName: 'Jaimin',
+  lastName: 'Kavathia',
   initials: 'JK',
   role: 'Senior Flutter Developer',
   location: 'Ahmedabad, India',
+  city: 'Ahmedabad',
+  region: 'Gujarat',
+  country: 'India',
   coordinates: '23.0225° N · 72.5714° E',
   timeZone: 'Asia/Kolkata',
   careerStartYear: 2021,
@@ -26,9 +30,49 @@ export const site = {
   phone: '+91 94266 90867',
   phoneHref: '+919426690867',
 
-  title: 'Jaimin Kavathia — Senior Flutter Developer',
-  description: `Senior Flutter Developer with ${yearsOfExperience}+ years building cross-platform apps for Android, iOS, web and desktop. Author of the smart_permission and adaptive_media_picker packages on pub.dev, and publisher of PDF Tools, SpotBuddy and Arrow Escape on Google Play.`,
+  /** Home page title and description, as shown in search results. */
+  title: 'Jaimin Kavathia | Senior Flutter Developer in Ahmedabad, India',
+  description: `Jaimin Kavathia is a senior Flutter developer in Ahmedabad, India: ${yearsOfExperience}+ years of Android, iOS, web and desktop apps, 2 pub.dev packages, ${apps.length} Play Store apps.`,
+
+  /**
+   * Paste the code from Google Search Console ("HTML tag" method) here to
+   * verify ownership. Leave empty until you have one.
+   */
+  googleSiteVerification: '',
+  /** Same for Bing Webmaster Tools. */
+  bingSiteVerification: '',
 } as const;
+
+/**
+ * Profiles that belong to the same person. They are published as structured
+ * data only (schema.org "sameAs"), which is how search engines connect this
+ * site to the name. They are not shown as links on the page.
+ */
+export const profiles = [
+  'https://www.linkedin.com/in/jaimin-kavathia-flutter-developer/',
+  'https://github.com/jaimin-kavathia',
+  'https://medium.com/@jaiminkavathia30',
+  'https://play.google.com/store/apps/developer?id=Jaimin+Kavathia',
+] as const;
+
+/** Topics the person is known for, used in structured data. */
+export const knowsAbout = [
+  'Flutter',
+  'Dart',
+  'Cross-platform mobile app development',
+  'Android app development',
+  'iOS app development',
+  'Flutter web and desktop',
+  'BLoC state management',
+  'Clean Architecture',
+  'Firebase',
+  'REST APIs',
+  'Bluetooth Low Energy',
+  'MQTT and IoT apps',
+  'NFC',
+  'In-app purchases',
+  'Open-source Flutter packages',
+] as const;
 
 export const stats = [
   { value: yearsOfExperience, suffix: '+', label: 'Years with Flutter' },

@@ -8,12 +8,17 @@ import Packages from '../components/Packages.astro';
 import Apps from '../components/Apps.astro';
 import Expertise from '../components/Expertise.astro';
 import Journey from '../components/Journey.astro';
+import HireTeaser from '../components/HireTeaser.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
+import { profilePageNode } from '../lib/schema';
+
+const modified = new Date().toISOString().slice(0, 10);
+const schema = [profilePageNode(Astro.site!, modified)];
 ---
 
-<Base>
-  <Nav />
+<Base schema={schema} type="profile">
+  <Nav home />
   <main id="main">
     <Hero />
     <Marquee />
@@ -22,6 +27,7 @@ import Footer from '../components/Footer.astro';
     <Apps />
     <Expertise />
     <Journey />
+    <HireTeaser />
     <Contact />
   </main>
   <Footer />

@@ -2,37 +2,27 @@
 import { Font } from 'astro:assets';
 import '../styles/base.css';
 import { site } from '../data/site';
+import { graph, personNode, websiteNode } from '../lib/schema';
 
 interface Props {
+  /** Full <title>, as it should read in search results. */
   title?: string;
   description?: string;
+  /** Extra schema.org nodes for this page. Person and WebSite are always included. */
+  schema?: Record<string, unknown>[];
+  /** Open Graph type. */
+  type?: 'website' | 'profile' | 'article';
+  /** Keep the page out of search results. */
+  noindex?: boolean;
 }
 
-const { title = site.title, description = site.description } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const ogImage = new URL('/og.png', Astro.site).href;
+const { title = site.title, description = site.description, schema = [], type = 'website', noindex = false } = Astro.props;
 
-const person = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: site.name,
-  jobTitle: site.role,
-  description,
-  url: Astro.site?.href,
-  image: ogImage,
-  address: { '@type': 'PostalAddress', addressLocality: 'Ahmedabad', addressCountry: 'IN' },
-  knowsAbout: [
-    'Flutter',
-    'Dart',
-    'Cross-platform app development',
-    'Android',
-    'iOS',
-    'BLoC',
-    'Firebase',
-    'Bluetooth Low Energy',
-    'Open source Flutter packages',
-  ],
-};
+const origin = Astro.site!;
+const canonical = new URL(Astro.url.pathname, origin).href;
+const ogImage = new URL('/og.png', origin).href;
+const portrait = new URL('/jaimin-kavathia.jpg', origin).href;
+const structured = graph([personNode(origin, portrait), websiteNode(origin), ...schema]);
 ---
 
 <!doctype html>
@@ -43,15 +33,22 @@ const person = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content={site.name} />
-    <link rel="canonical" href={canonical} />
+    <meta
+      name="robots"
+      content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1'}
+    />
+    {!noindex && <link rel="canonical" href={canonical} />}
+    {site.googleSiteVerification && <meta name="google-site-verification" content={site.googleSiteVerification} />}
+    {site.bingSiteVerification && <meta name="msvalidate.01" content={site.bingSiteVerification} />}
     <meta name="theme-color" content="#050506" />
     <meta name="color-scheme" content="dark" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -60,13 +57,21 @@ const person = {
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={`${site.name}, ${site.role}`} />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content="en_IN" />
+    {
+      type === 'profile' && (
+        <Fragment>
+          <meta property="profile:first_name" content={site.firstName} />
+          <meta property="profile:last_name" content={site.lastName} />
+        </Fragment>
+      )
+    }
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(person)} />
+    <script type="application/ld+json" is:inline set:html={structured} />
 
     <Font cssVariable="--font-sans" preload />
     <Font cssVariable="--font-serif" preload />

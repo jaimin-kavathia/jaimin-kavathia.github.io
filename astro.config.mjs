@@ -8,6 +8,8 @@ const font = (/** @type {string} */ path) => `./node_modules/${path}`;
 
 export default defineConfig({
   site: 'https://jaimin-kavathia.github.io',
+  // Every page lives at a URL that ends in a slash, so there is one address per page.
+  trailingSlash: 'always',
   compressHTML: true,
   build: {
     // One HTML response carries all the CSS: no render-blocking stylesheet request.

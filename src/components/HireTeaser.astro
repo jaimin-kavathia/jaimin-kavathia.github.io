@@ -1,0 +1,116 @@
+---
+/** Home page section that introduces freelance work and links to the hire page. */
+import { hirePath, services } from '../data/hire';
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+import Split from './Split.astro';
+---
+
+<section class="hireband section defer" id="hire" aria-labelledby="hire-title">
+  <div class="container hireband__grid">
+    <header class="shead hireband__head">
+      <p class="eyebrow" data-reveal><span class="eyebrow__dot"></span>Work with me</p>
+      <h2 class="h2" id="hire-title" data-split>
+        <Split text="Need a *Flutter developer* ~for your product?~" />
+      </h2>
+      <p class="lede" data-reveal style="--d:120ms">
+        I take on freelance and contract Flutter work from {site.city}, {site.country}, for startups and product
+        teams anywhere: new apps, MVPs, rescue jobs and the hard features in between.
+      </p>
+      <a class="btn btn--primary" href={hirePath} data-magnetic data-reveal style="--d:180ms">
+        Hire a freelance Flutter developer
+        <span class="btn__icon" aria-hidden="true"><Icon name="arrow-right" /><Icon name="arrow-right" /></span>
+      </a>
+    </header>
+
+    <ul class="hireband__list">
+      {
+        services.slice(0, 6).map((service, index) => (
+          <li data-reveal style={`--d:${index * 60}ms`}>
+            <span class="hireband__icon" aria-hidden="true">
+              <Icon name={service.icon} />
+            </span>
+            <div>
+              <h3>{service.title}</h3>
+              <p>{service.body}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style is:global>
+  .hireband__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(32px, 6vw, 96px);
+    align-items: start;
+  }
+
+  .hireband__head {
+    position: sticky;
+    top: 112px;
+    margin-bottom: 0;
+  }
+
+  .hireband__list {
+    display: grid;
+  }
+
+  .hireband__list li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1.1rem;
+    align-items: start;
+    padding-block: 1.35rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .hireband__list li:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hireband__icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--line-2);
+    border-radius: 13px;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .hireband__icon .icon {
+    width: 20px;
+    height: 20px;
+    stroke-width: 1.5;
+  }
+
+  .hireband__list h3 {
+    font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
+    font-weight: 400;
+    line-height: 1.25;
+    letter-spacing: -0.03em;
+  }
+
+  .hireband__list p {
+    margin-top: 0.3rem;
+    max-width: 56ch;
+    font-size: 0.95rem;
+    color: var(--text-2);
+  }
+
+  @media (max-width: 900px) {
+    .hireband__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .hireband__head {
+      position: static;
+      margin-bottom: 0;
+    }
+  }
+</style>

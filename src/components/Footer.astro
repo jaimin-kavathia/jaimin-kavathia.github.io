@@ -1,13 +1,64 @@
 ---
+import { apps } from '../data/apps';
+import { hirePath } from '../data/hire';
+import { packageLinks } from '../data/packages';
 import { site } from '../data/site';
 import Icon from './Icon.astro';
+
+/** Every page links to every other page from here, with descriptive link text. */
+const groups = [
+  {
+    title: 'Work with me',
+    links: [
+      { label: 'Hire a freelance Flutter developer', href: hirePath },
+      { label: 'Flutter expertise', href: '/#expertise' },
+      { label: 'Career journey', href: '/#journey' },
+    ],
+  },
+  {
+    title: 'Flutter packages',
+    links: packageLinks.map((pkg) => ({ label: pkg.name, href: pkg.path })),
+  },
+  {
+    title: 'Android apps',
+    links: apps.map((app) => ({ label: `${app.name}: ${app.subtitle}`, href: `/apps/${app.detail.slug}/` })),
+  },
+  {
+    title: 'Contact',
+    links: [
+      { label: site.email, href: `mailto:${site.email}` },
+      { label: site.phone, href: `tel:${site.phoneHref}` },
+    ],
+  },
+];
 ---
 
 <footer class="footer defer">
+  <nav class="container footer__nav" aria-label="Site">
+    <div class="footer__about">
+      <p class="footer__name">{site.name}</p>
+      <p>{site.role} in {site.city}, {site.country}. Flutter apps for Android, iOS, web and desktop.</p>
+    </div>
+    {
+      groups.map((group) => (
+        <div>
+          <p class="footer__label mono">{group.title}</p>
+          <ul>
+            {group.links.map((link) => (
+              <li>
+                <a href={link.href}>{link.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </nav>
+
   <div class="container footer__row">
     <p>© {new Date().getFullYear()} {site.name}</p>
-    <p class="footer__made">Designed and built in {site.location.split(',')[0]}</p>
-    <a class="footer__top" href="#top">
+    <p class="footer__made">Designed and built in {site.city}</p>
+    <a class="footer__top" href="#main">
       Back to top
       <span aria-hidden="true"><Icon name="arrow-up" /></span>
     </a>
@@ -17,8 +68,60 @@ import Icon from './Icon.astro';
 
 <style is:global>
   .footer {
-    padding-top: clamp(28px, 4vw, 44px);
+    padding-top: clamp(48px, 7vw, 96px);
     overflow: hidden;
+  }
+
+  .footer.defer:not(.is-rendered) {
+    contain-intrinsic-size: auto 620px;
+  }
+
+  .footer__nav {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) repeat(3, minmax(0, 1fr)) minmax(0, 1.2fr);
+    gap: clamp(24px, 3vw, 48px);
+    padding-bottom: clamp(36px, 5vw, 64px);
+    margin-bottom: clamp(20px, 3vw, 32px);
+    border-bottom: 1px solid var(--line);
+    font-size: 0.92rem;
+    color: var(--text-2);
+  }
+
+  .footer__about {
+    display: grid;
+    align-content: start;
+    gap: 0.6rem;
+    max-width: 34ch;
+  }
+
+  .footer__name {
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .footer__label {
+    margin-bottom: 0.9rem;
+    font-size: 0.64rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+
+  .footer__nav ul {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .footer__nav a {
+    overflow-wrap: break-word;
+    transition: color 0.3s;
+  }
+
+  .footer__nav a:hover {
+    color: var(--text);
   }
 
   .footer__row {
@@ -81,6 +184,16 @@ import Icon from './Icon.astro';
     user-select: none;
   }
 
+  @media (max-width: 1000px) {
+    .footer__nav {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .footer__about {
+      grid-column: 1 / -1;
+    }
+  }
+
   @media (max-width: 680px) {
     .footer__row {
       grid-template-columns: 1fr auto;
@@ -88,6 +201,12 @@ import Icon from './Icon.astro';
 
     .footer__made {
       display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer__nav {
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 </style>

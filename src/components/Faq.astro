@@ -1,0 +1,33 @@
+---
+/** Questions and answers as native <details>, so it works without JavaScript. */
+import type { Question } from '../lib/schema';
+import Icon from './Icon.astro';
+
+interface Props {
+  title: string;
+  questions: Question[];
+}
+
+const { title, questions } = Astro.props;
+---
+
+<section class="faq psection" aria-labelledby="faq-title">
+  <div class="container faq__grid">
+    <h2 class="h2 faq__title" id="faq-title">{title}</h2>
+    <div class="faq__list">
+      {
+        questions.map((item) => (
+          <details class="faq__item">
+            <summary>
+              <h3>{item.question}</h3>
+              <span class="faq__icon" aria-hidden="true">
+                <Icon name="arrow-down" />
+              </span>
+            </summary>
+            <p>{item.answer}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

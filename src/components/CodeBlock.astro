@@ -1,0 +1,25 @@
+---
+/** A highlighted Dart sample with a copy button. */
+import { highlightDart } from '../lib/highlight';
+import Icon from './Icon.astro';
+
+interface Props {
+  code: string;
+  label?: string;
+}
+
+const { code, label = 'main.dart' } = Astro.props;
+---
+
+<figure class="code">
+  <figcaption class="mono">
+    <span class="code__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    {label}
+    <button type="button" class="code__copy" data-copy={code}>
+      <span class="sr-only">Copy code</span>
+      <Icon name="copy" class="code__icon-copy" />
+      <Icon name="check" class="code__icon-done" />
+    </button>
+  </figcaption>
+  <pre class="mono" tabindex="0"><code set:html={highlightDart(code)} /></pre>
+</figure>
