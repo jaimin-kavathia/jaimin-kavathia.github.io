@@ -2,7 +2,7 @@
 import { apps } from '../data/apps';
 import { hirePath } from '../data/hire';
 import { packageLinks } from '../data/packages';
-import { site } from '../data/site';
+import { profiles, site } from '../data/site';
 import Icon from './Icon.astro';
 
 /** Every page links to every other page from here, with descriptive link text. */
@@ -38,6 +38,18 @@ const groups = [
     <div class="footer__about">
       <p class="footer__name">{site.name}</p>
       <p>{site.role} in {site.city}, {site.country}. Flutter apps for Android, iOS, web and desktop.</p>
+      <ul class="footer__profiles" aria-label="Profiles">
+        {
+          profiles.map((profile) => (
+            <li>
+              <a href={profile.href} target="_blank" rel="me noopener">
+                {profile.label}
+                <Icon name="arrow-up-right" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
     {
       groups.map((group) => (
@@ -99,6 +111,48 @@ const groups = [
     font-weight: 500;
     letter-spacing: -0.02em;
     color: var(--text);
+  }
+
+  /* Profile links, as small pills under the name */
+  .footer__nav .footer__profiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 0.5rem;
+  }
+
+  .footer__profiles a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.36rem 0.6rem 0.36rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.025);
+    font-size: 0.82rem;
+    color: var(--text);
+    transition:
+      border-color 0.3s,
+      background-color 0.3s;
+  }
+
+  .footer__profiles a:hover {
+    border-color: var(--line-2);
+    background: rgb(255 255 255 / 0.06);
+  }
+
+  .footer__profiles .icon {
+    width: 13px;
+    height: 13px;
+    color: var(--text-2);
+    transition:
+      transform 0.4s var(--ease-out),
+      color 0.3s;
+  }
+
+  .footer__profiles a:hover .icon {
+    color: var(--accent);
+    transform: translate(1px, -1px);
   }
 
   .footer__label {

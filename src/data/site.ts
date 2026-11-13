@@ -44,15 +44,15 @@ export const site = {
 } as const;
 
 /**
- * Profiles that belong to the same person. They are published as structured
- * data only (schema.org "sameAs"), which is how search engines connect this
- * site to the name. They are not shown as links on the page.
+ * Profiles that belong to the same person. They are shown as links in the
+ * footer, and published as structured data (schema.org "sameAs"), which is
+ * how search engines connect this site to the name.
  */
 export const profiles = [
-  'https://www.linkedin.com/in/jaimin-kavathia-flutter-developer/',
-  'https://github.com/jaimin-kavathia',
-  'https://medium.com/@jaiminkavathia30',
-  'https://play.google.com/store/apps/developer?id=Jaimin+Kavathia',
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/jaimin-kavathia-flutter-developer/' },
+  { label: 'Medium', href: 'https://medium.com/@jaiminkavathia30' },
+  { label: 'GitHub', href: 'https://github.com/jaimin-kavathia' },
+  { label: 'Google Play', href: 'https://play.google.com/store/apps/developer?id=Jaimin+Kavathia' },
 ] as const;
 
 /** Topics the person is known for, used in structured data. */

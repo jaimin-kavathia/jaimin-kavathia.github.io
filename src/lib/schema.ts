@@ -39,7 +39,7 @@ export function personNode(origin: URL, image: string): Node {
       skills: knowsAbout.join(', '),
     },
     knowsAbout: [...knowsAbout],
-    sameAs: [...profiles],
+    sameAs: profiles.map((profile) => profile.href),
   };
 }
 
