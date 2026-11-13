@@ -85,11 +85,19 @@ The site `https://jaimin-kavathia.github.io/` is registered with both search con
 | [Google Search Console](https://search.google.com/search-console) | Google | `public/google7d159be857f1c52e.html` |
 | [Bing Webmaster Tools](https://www.bing.com/webmasters) (sign in with Google) | Bing, and the engines that use its index: Yahoo, DuckDuckGo, Microsoft Copilot | `public/BingSiteAuth.xml` |
 
+Bing is told about changes automatically. After every deploy, except the automatic Monday rebuild, the workflow runs `.github/scripts/indexnow.mjs`, which sends each URL in the live sitemap to [IndexNow](https://www.indexnow.org/), the notification feed that Bing, Yandex and a few other engines read. It identifies the site with the key file `public/a815de20e6a34f4e5187faf50a900407.txt`, so that file must stay too. Google does not use IndexNow.
+
 When you add a new page:
 
 1. Add it to `src/pages/sitemap.xml.ts` if it is not picked up from the data files.
-2. After deploying, open Search Console, paste the new URL into **URL inspection** and press **Request indexing**.
-3. In Bing Webmaster Tools, open **URL submission** and submit the same URL.
+2. Push. Bing hears about it through IndexNow.
+3. For Google, open Search Console, paste the new URL into **URL inspection** and press **Request indexing**.
+
+To see what would be sent, without sending it:
+
+```bash
+node .github/scripts/indexnow.mjs https://jaimin-kavathia.github.io/ --dry-run
+```
 
 ## Structure
 
