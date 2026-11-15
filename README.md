@@ -116,6 +116,8 @@ src/
 public/         favicon, icons, og.png, robots.txt, web manifest
 ```
 
+The site icon is `public/favicon.svg`. `favicon.ico`, `apple-touch-icon.png` and `icon-512.png` are fixed-size copies of it for crawlers, old browsers and phones, so remake them if the SVG ever changes.
+
 ## Motion
 
 - Hero: a WebGL smoke shader that runs in a Web Worker (OffscreenCanvas), at half resolution, paused when off screen or when the tab is hidden. Without a GPU it is skipped and a CSS backdrop is shown.
