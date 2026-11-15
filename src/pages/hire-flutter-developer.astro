@@ -13,7 +13,6 @@ import { site, yearsOfExperience } from '../data/site';
 import { breadcrumbNode, faqNode, personId, webPageNode, type Crumb } from '../lib/schema';
 
 const origin = Astro.site!;
-const modified = new Date().toISOString().slice(0, 10);
 const crumbs: Crumb[] = [
   { name: 'Home', path: '/' },
   { name: 'Hire a Flutter developer', path: hirePath },
@@ -29,7 +28,7 @@ const facts = [
 ];
 
 const schema = [
-  webPageNode(origin, hirePath, hireSeo.title, hireSeo.description, modified),
+  webPageNode(origin, hirePath, hireSeo.title, hireSeo.description),
   breadcrumbNode(origin, crumbs),
   {
     '@type': 'Service',

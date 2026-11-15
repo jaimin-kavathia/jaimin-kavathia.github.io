@@ -13,8 +13,7 @@ import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
 import { profilePageNode } from '../lib/schema';
 
-const modified = new Date().toISOString().slice(0, 10);
-const schema = [profilePageNode(Astro.site!, modified)];
+const schema = [profilePageNode(Astro.site!)];
 ---
 
 <Base schema={schema} type="profile">

@@ -26,7 +26,6 @@ const { detail } = app;
 const path = `/apps/${detail.slug}/`;
 const origin = Astro.site!;
 const url = new URL(path, origin).href;
-const modified = new Date().toISOString().slice(0, 10);
 
 const files = import.meta.glob<{ default: ImageMetadata }>('../../assets/apps/*.{png,jpg,jpeg,webp,avif}', {
   eager: true,
@@ -43,7 +42,7 @@ const crumbs: Crumb[] = [
 ];
 
 const schema = [
-  webPageNode(origin, path, detail.seoTitle, detail.seoDescription, modified),
+  webPageNode(origin, path, detail.seoTitle, detail.seoDescription),
   breadcrumbNode(origin, crumbs),
   {
     '@type': 'MobileApplication',

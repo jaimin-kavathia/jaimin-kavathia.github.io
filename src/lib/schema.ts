@@ -11,6 +11,13 @@ const abs = (origin: URL, path: string) => new URL(path, origin).href;
 export const personId = (origin: URL) => abs(origin, '/#person');
 export const websiteId = (origin: URL) => abs(origin, '/#website');
 
+/**
+ * When this build ran, as a full ISO 8601 date and time with its offset,
+ * e.g. "2026-11-15T06:49:37+00:00". Google reports a date on its own
+ * ("2026-11-15") as an invalid dateModified on a profile page.
+ */
+const builtAt = new Date().toISOString().replace(/\.\d+Z$/, '+00:00');
+
 export function personNode(origin: URL, image: string): Node {
   return {
     '@type': 'Person',
@@ -56,7 +63,7 @@ export function websiteNode(origin: URL): Node {
   };
 }
 
-export function profilePageNode(origin: URL, modified: string): Node {
+export function profilePageNode(origin: URL): Node {
   return {
     '@type': 'ProfilePage',
     '@id': abs(origin, '/#profile'),
@@ -65,12 +72,12 @@ export function profilePageNode(origin: URL, modified: string): Node {
     isPartOf: { '@id': websiteId(origin) },
     about: { '@id': personId(origin) },
     mainEntity: { '@id': personId(origin) },
-    dateModified: modified,
+    dateModified: builtAt,
     inLanguage: 'en',
   };
 }
 
-export function webPageNode(origin: URL, path: string, name: string, description: string, modified: string): Node {
+export function webPageNode(origin: URL, path: string, name: string, description: string): Node {
   return {
     '@type': 'WebPage',
     '@id': `${abs(origin, path)}#page`,
@@ -80,7 +87,7 @@ export function webPageNode(origin: URL, path: string, name: string, description
     isPartOf: { '@id': websiteId(origin) },
     about: { '@id': personId(origin) },
     author: { '@id': personId(origin) },
-    dateModified: modified,
+    dateModified: builtAt,
     inLanguage: 'en',
   };
 }

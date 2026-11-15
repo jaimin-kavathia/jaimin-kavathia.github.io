@@ -30,7 +30,6 @@ const { pkg, others } = Astro.props;
 const { detail } = pkg;
 const origin = Astro.site!;
 const url = new URL(pkg.path, origin).href;
-const modified = new Date().toISOString().slice(0, 10);
 
 const crumbs: Crumb[] = [
   { name: 'Home', path: '/' },
@@ -48,7 +47,7 @@ const facts = [
 ];
 
 const schema = [
-  webPageNode(origin, pkg.path, detail.seoTitle, detail.seoDescription, modified),
+  webPageNode(origin, pkg.path, detail.seoTitle, detail.seoDescription),
   breadcrumbNode(origin, crumbs),
   {
     '@type': 'SoftwareSourceCode',
