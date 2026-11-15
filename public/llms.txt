@@ -14,6 +14,7 @@
 
 ## Android apps
 
+- [Fotaro](https://jaimin-kavathia.github.io/apps/fotaro/): AI photo and video editor with 130 film looks, a background remover, collages and a cinema camera
 - [SpotBuddy](https://jaimin-kavathia.github.io/apps/spotbuddy/): find-my-parked-car app with one-tap save, compass and meter timer
 - [Arrow Escape](https://jaimin-kavathia.github.io/apps/arrow-escape/): tap-away arrow puzzle with 10,000 levels
 - [PDF Tools](https://jaimin-kavathia.github.io/apps/pdf-tools/): offline PDF editor, scanner and converter

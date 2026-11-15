@@ -1,4 +1,5 @@
 ---
+import { appCountWord } from '../data/apps';
 import { journey } from '../data/journey';
 import { site, yearsOfExperience } from '../data/site';
 import Split from './Split.astro';
@@ -16,7 +17,7 @@ const kinds = { career: 'Career', education: 'Education', release: 'Release', le
         <Split text={`${yearsOfExperience} years in, ~and still~ *shipping.*`} />
       </h2>
       <p class="lede" data-reveal style="--d:120ms">
-        From a first Flutter role in {site.careerStartYear} to five teams, two open-source packages and three apps
+        From a first Flutter role in {site.careerStartYear} to five teams, two open-source packages and {appCountWord} apps
         of my own.
       </p>
     </header>

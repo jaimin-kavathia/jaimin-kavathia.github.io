@@ -596,13 +596,15 @@
 }
 
 /* ---------- "More" links ---------- */
+/* Links wrap and grow, so a short last row fills the width instead of leaving a gap */
 .more {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: clamp(12px, 1.6vw, 20px);
 }
 
 .more a {
+  flex: 1 1 min(100%, 260px);
   display: flex;
   align-items: center;
   justify-content: space-between;

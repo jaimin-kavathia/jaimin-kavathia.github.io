@@ -4,6 +4,9 @@
  * change anything that does not match how you actually take on work.
  */
 import type { Question } from '../lib/schema';
+import { appCountWord } from './apps';
+
+const capitalise = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
 import { yearsOfExperience } from './site';
 
 export const hirePath = '/hire-flutter-developer/';
@@ -91,7 +94,7 @@ export const checklist = [
   {
     title: 'Apps you can install today',
     body: 'A portfolio of screenshots proves little. Ask for apps that are live in a store, then use them.',
-    proof: 'Three of my own apps are on Google Play.',
+    proof: `${capitalise(appCountWord)} of my own apps are on Google Play.`,
     link: { label: 'See the apps', href: '/#apps' },
   },
   {

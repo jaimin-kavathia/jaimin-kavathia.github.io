@@ -60,7 +60,11 @@ Best results: 4:5 portrait, at least 1200 × 1500 px, face in the upper half, da
 }
 ```
 
-The Apps section, its navigation link and the "Apps on Google Play" stat all follow this list.
+The Apps section, its navigation link, the "Apps on Google Play" stat, the sitemap and the app's own page at `/apps/<slug>/` all follow this list. Each entry also needs a `detail` block for that page; copy one from an existing app.
+
+Cards sit three to a row. When the count leaves one app over, the newest app (the first in the list) gets a wide card that shows up to three screenshots; with two over, the two newest share a row.
+
+Also update by hand: the "apps of my own" milestone in `src/data/journey.ts` and the app list in `public/llms.txt`.
 
 ## Pages and search
 
@@ -70,7 +74,7 @@ The Apps section, its navigation link and the "Apps on Google Play" stat all fol
 | `/hire-flutter-developer/` | "hire Flutter developer India", "freelance Flutter developer", "Flutter app developer for hire" | `hire.ts` |
 | `/packages/smart-permission/` | "Flutter runtime permissions package", "permission_handler" questions | `packages.ts` → `detail` |
 | `/packages/adaptive-media-picker/` | "Flutter image picker with crop", "Flutter media picker" | `packages.ts` → `detail` |
-| `/apps/spotbuddy/`, `/apps/arrow-escape/`, `/apps/pdf-tools/` | each app's name and category | `apps.ts` → `detail` |
+| `/apps/fotaro/`, `/apps/spotbuddy/`, `/apps/arrow-escape/`, `/apps/pdf-tools/` | each app's name and category | `apps.ts` → `detail` |
 
 Each page sets its own title, description and canonical URL, and publishes schema.org structured data (built in `src/lib/schema.ts`): a `Person` and `WebSite` on every page, plus `ProfilePage`, `Service`, `SoftwareSourceCode`, `MobileApplication`, `BreadcrumbList` and `FAQPage` where they apply. `sitemap.xml` lists every page and is regenerated on each build.
 

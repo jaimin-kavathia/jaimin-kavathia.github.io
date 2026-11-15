@@ -78,9 +78,9 @@ export const journey: Milestone[] = [
   },
   {
     when: '2026',
-    title: 'Three apps of my own',
+    title: 'Four apps of my own',
     place: 'Google Play',
-    body: 'PDF Tools in May, Arrow Escape in October and SpotBuddy in November. Designed, built and published independently.',
+    body: 'PDF Tools in May, Arrow Escape in October, then SpotBuddy and Fotaro in November. Designed, built and published independently.',
     kind: 'release',
   },
 ];

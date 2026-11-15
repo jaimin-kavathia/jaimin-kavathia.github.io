@@ -8,6 +8,14 @@ const files = import.meta.glob<{ default: ImageMetadata }>('../assets/apps/*.{pn
   eager: true,
 });
 const asset = (name?: string) => (name ? files[`../assets/apps/${name}`]?.default : undefined);
+
+/**
+ * A row holds three cards. So that no card is left alone on the last row,
+ * the leftovers go first: one extra app gets a wide card of its own,
+ * two extra apps share a row.
+ */
+const extra = apps.length % 3;
+const variant = (index: number) => (extra === 1 && index === 0 ? 'featured' : extra === 2 && index < 2 ? 'half' : '');
 ---
 
 {
@@ -34,19 +42,26 @@ const asset = (name?: string) => (name ? files[`../assets/apps/${name}`]?.defaul
         <div class="apps__grid">
           {apps.map((app, index) => {
             const icon = asset(app.icon);
+            const kind = variant(index);
+            const featured = kind === 'featured';
             const shots = (app.screenshots ?? [])
               .map(asset)
               .filter((shot) => shot !== undefined)
-              .slice(0, 2);
+              .slice(0, featured ? 3 : 2);
             return (
-              <article class="app card" data-spot data-reveal style={`--d:${index * 110}ms;--tint:${app.tint}`}>
+              <article
+                class:list={['app card', kind && `app--${kind}`]}
+                data-spot
+                data-reveal
+                style={`--d:${index * 110}ms;--tint:${app.tint}`}
+              >
                 <div class="app__media">
                   <span class="app__glow" aria-hidden="true" />
                   <span class="app__dots" aria-hidden="true" />
                   {shots.length > 0 ? (
                     <div class="app__shots">
                       {shots.map((shot, shotIndex) => (
-                        <div class="app__shot" style={`--n:${shotIndex}`}>
+                        <div class="app__shot" style={`--n:${featured ? shotIndex % 2 : shotIndex}`}>
                           <Image
                             src={shot}
                             alt={`${app.name} Android app, screenshot ${shotIndex + 1}`}
@@ -71,6 +86,7 @@ const asset = (name?: string) => (name ? files[`../assets/apps/${name}`]?.defaul
                 </div>
 
                 <div class="app__body">
+                  {featured && <p class="app__flag mono">Latest release</p>}
                   <header class="app__head">
                     {shots.length > 0 && icon && (
                       <Image class="app__icon" src={icon} alt={`${app.name} app icon`} width={48} height={48} densities={[1, 2, 3]} quality={90} />
@@ -120,9 +136,10 @@ const asset = (name?: string) => (name ? files[`../assets/apps/${name}`]?.defaul
 }
 
 <style is:global>
+  /* Six tracks: a card takes two, a half card three, the featured card all six */
   .apps__grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: clamp(14px, 1.8vw, 24px);
   }
 
@@ -130,7 +147,20 @@ const asset = (name?: string) => (name ? files[`../assets/apps/${name}`]?.defaul
     --tint: var(--accent);
     display: flex;
     flex-direction: column;
+    grid-column: span 2;
     border-radius: 26px;
+  }
+
+  .app--half {
+    grid-column: span 3;
+  }
+
+  .app--featured {
+    grid-column: 1 / -1;
+  }
+
+  .app__flag {
+    display: none;
   }
 
   /* ---------- Media: the app's colour, with its icon or screenshots ---------- */
@@ -363,14 +393,100 @@ const asset = (name?: string) => (name ? files[`../assets/apps/${name}`]?.defaul
     margin-right: -0.3rem;
   }
 
+  /* ---------- Featured: the newest app, full width, whole phones in a row ---------- */
+  @media (min-width: 1021px) {
+    .app--featured {
+      flex-direction: row;
+    }
+
+    .app--featured .app__media,
+    .app--featured .app__media:has(.app__shots) {
+      flex: 0 0 57%;
+      height: auto;
+      min-height: 440px;
+      border-right: 1px solid var(--line);
+      border-bottom: 0;
+    }
+
+    .app--featured .app__shots {
+      align-items: center;
+      gap: 18px;
+      padding: 62px 28px 36px;
+    }
+
+    /* Whole phones here, so the frame takes the screenshot's own proportions */
+    .app--featured .app__shot {
+      flex-basis: 188px;
+      aspect-ratio: auto;
+      border-radius: 17px;
+    }
+
+    .app--featured .app__shot img {
+      height: auto;
+      border-radius: 13px;
+    }
+
+    .app--featured .app__body {
+      justify-content: center;
+      gap: 1.1rem;
+      padding: clamp(28px, 3.4vw, 48px);
+    }
+
+    .app--featured .app__flag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.64rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-2);
+    }
+
+    .app--featured .app__flag::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--tint);
+    }
+
+    .app--featured .app__name {
+      font-size: 1.7rem;
+    }
+
+    .app--featured .app__tagline {
+      font-size: clamp(1.5rem, 1.1rem + 1.1vw, 2.05rem);
+    }
+
+    .app--featured .app__description {
+      max-width: 46ch;
+      font-size: 1rem;
+    }
+
+    .app--featured .app__actions {
+      margin-top: 0.3rem;
+    }
+  }
+
   /* Tablet: one card per row, media beside the text */
   @media (max-width: 1020px) {
     .apps__grid {
       grid-template-columns: minmax(0, 1fr);
     }
 
+    .app,
+    .app--half,
+    .app--featured {
+      grid-column: auto;
+    }
+
     .app {
       flex-direction: row;
+    }
+
+    /* The extra screens of the featured card only fit on a wide screen */
+    .app__shot:nth-child(n + 3) {
+      display: none;
     }
 
     .app__media,

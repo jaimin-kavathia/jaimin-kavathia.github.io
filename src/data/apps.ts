@@ -39,7 +39,10 @@ export interface AppInfo {
   tint: string;
   /** File name inside src/assets/apps/. */
   icon: string;
-  /** Optional portrait screenshots inside src/assets/apps/. Up to two are shown, in phone frames. */
+  /**
+   * Optional portrait screenshots inside src/assets/apps/, shown in phone frames.
+   * A card shows the first two; the wide card of the newest app shows up to three.
+   */
   screenshots?: string[];
   /** Optional Google Play rating, e.g. "5.0". Update by hand when it changes. */
   rating?: string;
@@ -55,6 +58,117 @@ export const developerUrl = 'https://play.google.com/store/apps/developer?id=Jai
  * as soon as this list has at least one entry.
  */
 export const apps: AppInfo[] = [
+  {
+    name: 'Fotaro',
+    subtitle: 'AI Photo & Video Editor',
+    category: 'Photography',
+    tagline: 'Edit photos and videos like film.',
+    description:
+      'A photo, video and audio editor and a cinema camera in one app. Sharpen a photo in one tap, choose from 130 film looks, remove backgrounds, build collages and carousels, and cut videos on a timeline. It all runs on the phone, with no account and no watermark.',
+    highlights: ['130 film looks', 'Dual camera', 'No watermark'],
+    playUrl: 'https://play.google.com/store/apps/details?id=com.toolverse.fotaro',
+    released: 'Nov 2026',
+    tint: '#a48dff',
+    icon: 'fotaro.png',
+    screenshots: ['fotaro-1.webp', 'fotaro-2.webp', 'fotaro-3.webp'],
+    detail: {
+      slug: 'fotaro',
+      seoTitle: 'Fotaro: AI Photo & Video Editor for Android | Jaimin Kavathia',
+      seoDescription:
+        'Fotaro is a free Android photo and video editor with AI enhance, 130 film looks, a background remover, collages and a cinema camera. No watermark.',
+      pageTitle: 'Fotaro: an *AI photo and video editor* ~for Android~',
+      intro: [
+        'Fotaro is a photo, video and audio editor and a cinema camera in one app. Make a photo sharp again in one tap, give it a film look, cut out the subject, build collages and Instagram carousels, edit videos on a timeline and clean up a voice.',
+        'It all runs on your phone. There is no account, no watermark is added, and your photos and videos are never uploaded. I designed, built and published Fotaro on my own, with Flutter. It is live on Google Play.',
+      ],
+      groups: [
+        {
+          title: 'AI enhance and 130 film looks',
+          items: [
+            'Auto enhance fixes only what a photo needs, in one tap, with a strength you choose',
+            'Clear & sharpen: AI upscale to twice the size for blurry or small photos',
+            '130 hand-made looks for nature, cinema, film, food, portrait, night and black and white',
+            'Curves, HSL mixer, split toning, grain, glow and dehaze, plus 10 art styles',
+          ],
+        },
+        {
+          title: 'Background remover and cutouts',
+          items: [
+            'Remove the background from one photo, or from up to 20 at once for product photos',
+            'Put a new background, a colour or a blur behind the subject, with outline and shadow',
+            'Double exposure, and light or blur only the person or only the background',
+            'Hide faces and number plates in photos and videos',
+          ],
+        },
+        {
+          title: 'Collages, templates and carousels',
+          items: [
+            '68 story and post templates, and your own',
+            'Carousel maker: one seamless canvas across up to 10 slides',
+            'Collage maker with grids or free placing, for 2 to 9 photos',
+            'Profile grids, thumbnails, Reels covers and before-and-after images',
+          ],
+        },
+        {
+          title: 'Video editor',
+          items: [
+            'Trim, split and reorder clips, with text, stickers, picture in picture and green screen',
+            'Auto reframe turns a wide video tall and keeps the person you pick in frame',
+            'Quick film: pick clips and music, and the cuts land on the beat',
+            'Music, voice-over, captions from speech and speed curves, with export up to 4K',
+          ],
+        },
+        {
+          title: 'Cinema camera and Dual camera',
+          items: [
+            'Photo, video and cinema modes with live film looks',
+            'Dual camera: the front and back camera in one photo or video',
+            'Manual ISO, shutter, white balance and focus, with histogram and focus peaking',
+            'A teleprompter that listens: your script scrolls as you speak',
+          ],
+        },
+        {
+          title: 'Audio tools and Compress',
+          items: [
+            'Video to audio, and Clean voice that takes background noise out of speech',
+            'Trim, join and mix a voice over music that dips while someone speaks',
+            'Compress photos, videos and sound files into smaller copies',
+            'Remove location and camera info from photos',
+          ],
+        },
+      ],
+      facts: [
+        { label: 'Platform', value: 'Android' },
+        { label: 'Category', value: 'Photography' },
+        { label: 'Price', value: 'Free, with no ads' },
+        { label: 'Released', value: 'November 2026' },
+        { label: 'Built with', value: 'Flutter' },
+      ],
+      faq: [
+        {
+          question: 'Is Fotaro free?',
+          answer:
+            'Yes. Fotaro is free, with no ads and no in-app purchases, and it does not add a watermark to your photos or videos.',
+        },
+        {
+          question: 'Does Fotaro upload my photos?',
+          answer:
+            'No. Photos, videos and sound are edited on your phone and never uploaded, and there is no account or sign-in. The app sends only anonymous usage statistics and crash reports.',
+        },
+        {
+          question: 'Does Fotaro work offline?',
+          answer:
+            'Yes. Editing, AI enhance, background removal and Clean voice all run on your phone, so they work without an internet connection.',
+        },
+        {
+          question: 'Can Fotaro remove the background from a photo?',
+          answer:
+            'Yes. One tap cuts out the subject, and you can then put a colour, a gradient, a blur or another photo behind it. Up to 20 photos can be done at once, which helps with product photos.',
+        },
+      ],
+      schemaCategory: 'MultimediaApplication',
+    },
+  },
   {
     name: 'SpotBuddy',
     subtitle: 'Find My Parked Car',
@@ -363,6 +477,11 @@ export const apps: AppInfo[] = [
     },
   },
 ];
+
+const numberWords = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+
+/** How many apps there are, as a word for running text: "four". */
+export const appCountWord = numberWords[apps.length] ?? String(apps.length);
 
 /** Paths and names only, for navigation and the sitemap. */
 export const appLinks = apps.map((app) => ({ name: app.name, path: `/apps/${app.detail.slug}/` }));
